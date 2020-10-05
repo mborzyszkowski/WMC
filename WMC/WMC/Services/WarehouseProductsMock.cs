@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using WMC.Models;
 
 namespace WMC.Services
@@ -18,36 +19,39 @@ namespace WMC.Services
             };
         }
 
-        public bool AddProduct(Product product)
+        public async Task<bool> AddProduct(Product product)
         {
             products.Add(product);
-            return true;
+            return await Task.FromResult(true);
         }
 
-        public Product GetProduct(long productId)
+        public async Task<Product> GetProduct(long productId)
         {
-            return products.Where(p => p.Id == productId).FirstOrDefault();
+            return await Task.FromResult(products.Where(p => p.Id == productId).FirstOrDefault());
         }
 
-        public IEnumerable<Product> GetProductsList()
+        public async Task<IEnumerable<Product>> GetProductsList()
         {
-            return products;
+            //HttpClient client = new HttpClient();
+            //string content = await client.GetStringAsync("http://apiIp:8080/products");
+
+            return await Task.FromResult(products);
         }
 
-        public bool RemoveProduct(long productId)
+        public async Task<bool> RemoveProduct(long productId)
         {
             Product product = products.Where(p => p.Id == productId).FirstOrDefault();
 
             if (product != null)
             {
                 products.Remove(product);
-                return true;
+                return await Task.FromResult(true);
             }
 
-            return false;
+            return await Task.FromResult(false);
         }
 
-        public bool UpdateProduct(Product updateProduct)
+        public async Task<bool> UpdateProduct(Product updateProduct)
         {
             Product product = products.Where(p => p.Id == updateProduct.Id).FirstOrDefault();
 
@@ -56,36 +60,36 @@ namespace WMC.Services
                 product.ManufacturerName = updateProduct.ManufacturerName;
                 product.ModelName = updateProduct.ModelName;
                 product.Price = updateProduct.Price;
-                return true;
+                return await Task.FromResult(true);
             }
 
-            return false;
+            return await Task.FromResult(false);
         }
 
-        public bool IncreaseProductQuantity(long productId, int intCount)
+        public async Task<bool> IncreaseProductQuantity(long productId, int intCount)
         {
             Product product = products.Where(p => p.Id == productId).FirstOrDefault();
             
             if (product != null)
             {
                 product.Quantity += intCount;
-                return true;
+                return await Task.FromResult(true);
             }
 
-            return false;
+            return await Task.FromResult(false);
         }
 
-        public bool DecreaseProductQuantity(long productId, int decCount)
+        public async Task<bool> DecreaseProductQuantity(long productId, int decCount)
         {
             Product product = products.Where(p => p.Id == productId).FirstOrDefault();
            
             if (product != null)
             {
                 product.Quantity -= decCount;
-                return true;
+                return await Task.FromResult(true);
             }
 
-            return false;
+            return await Task.FromResult(false);
         }
     }
 }

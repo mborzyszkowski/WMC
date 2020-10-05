@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Dynamic;
 using System.Text;
+using System.Threading.Tasks;
 using WMC.Models;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -21,17 +22,17 @@ namespace WMC.ViewModels
         {
             Title = "Warehouse Products";
             Products = new ObservableCollection<Product>();
-            LoadProductsCommand = new Command(ExecuteLoadProduct);
+            LoadProductsCommand = new Command(async () => await ExecuteLoadProduct());
         }
 
-        void ExecuteLoadProduct()
+        async Task ExecuteLoadProduct()
         {
             IsBusy = true;
 
             try
             {
                 Products.Clear();
-                var products = Warehouse.GetProductsList();
+                var products = await Warehouse.GetProductsList();
                 products.ForEach(p => Products.Add(p));
             }
             catch(Exception ex)
