@@ -1,12 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="WMC.Views.ProductListPage">
-    <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
-    </ContentPage.Content>
+             x:Class="WMC.Views.ProductListPage"
+			 Title="{Binding Title}"
+			 xmlns:local="clr-namespace:WMC.ViewModels"
+			 xmlns:model="clr-namespace:WMC.Models">
+	
+	<RefreshView x:DataType="local:ProductsListViewModel" Command="{Binding LoadProductsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+		<CollectionView x:Name="ProductsListView" ItemsSource="{Binding Products}" SelectionMode="None">
+			<CollectionView.ItemTemplate>
+				<DataTemplate>
+					<StackLayout Padding="10" x:DataType="model:Product">
+						<Label Text="{Binding ManufacturerName}"
+							   LineBreakMode="NoWrap"
+							   FontSize="16"/>
+						<Label Text="{Binding ModelName}"
+							   LineBreakMode="NoWrap"
+							   FontSize="16"/>
+						<Label Text="{Binding Price}"
+							   LineBreakMode="NoWrap"
+							   FontSize="16"/>
+						<Label Text="{Binding Quantity}"
+							   LineBreakMode="NoWrap"
+							   FontSize="16"/>
+					</StackLayout>
+				</DataTemplate>
+			</CollectionView.ItemTemplate>
+		</CollectionView>
+	</RefreshView>
+	
 </ContentPage>

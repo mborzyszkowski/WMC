@@ -18,7 +18,7 @@ namespace WMC.Views
         {
             InitializeComponent();
 
-            BindingContext = _viewModel;
+            BindingContext = _viewModel = new ProductsListViewModel();
         }
 
         protected override void OnAppearing()

@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using WMC.Models;
 
 namespace WMC.Services
@@ -13,7 +13,8 @@ namespace WMC.Services
         {
             products = new List<Product>
             {
-                new Product() { Id = 1, ManufacturerName = " Samsung", ModelName = "Galaxy S9", Price = 3499, Quantity = 2}
+                new Product() { Id = 1, ManufacturerName = "Samsung", ModelName = "Galaxy S9", Price = 3499, Quantity = 2},
+                new Product() { Id = 2, ManufacturerName = "Huawei", ModelName = "P9", Price = 1500, Quantity = 4}
             };
         }
 
