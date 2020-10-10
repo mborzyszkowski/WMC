@@ -16,16 +16,10 @@ namespace WMC.Services
             {
                 new Product { Id = 1, ManufacturerName = "Samsung", ModelName = "Galaxy S9", Price = 3499, Quantity = 2},
                 new Product { Id = 2, ManufacturerName = "Huawei", ModelName = "P9", Price = 1500, Quantity = 4},
-                new Product { Id = 1, ManufacturerName = "Samsung", ModelName = "Galaxy S9", Price = 3499, Quantity = 2},
-                new Product { Id = 2, ManufacturerName = "Huawei", ModelName = "P9", Price = 1500, Quantity = 4},
-                new Product { Id = 1, ManufacturerName = "Samsung", ModelName = "Galaxy S9", Price = 3499, Quantity = 2},
-                new Product { Id = 2, ManufacturerName = "Huawei", ModelName = "P9", Price = 1500, Quantity = 4},
-                new Product { Id = 1, ManufacturerName = "Samsung", ModelName = "Galaxy S9", Price = 3499, Quantity = 2},
-                new Product { Id = 2, ManufacturerName = "Huawei", ModelName = "P9", Price = 1500, Quantity = 4},
-                new Product { Id = 1, ManufacturerName = "Samsung", ModelName = "Galaxy S9", Price = 3499, Quantity = 2},
-                new Product { Id = 2, ManufacturerName = "Huawei", ModelName = "P9", Price = 1500, Quantity = 4},
-                new Product { Id = 1, ManufacturerName = "Samsung", ModelName = "Galaxy S9", Price = 3499, Quantity = 2},
-                new Product { Id = 2, ManufacturerName = "Huawei", ModelName = "P9", Price = 1500, Quantity = 4},
+                new Product { Id = 3, ManufacturerName = "Samsung", ModelName = "Galaxy S9", Price = 3499, Quantity = 2},
+                new Product { Id = 4, ManufacturerName = "Huawei", ModelName = "P9", Price = 1500, Quantity = 4},
+                new Product { Id = 5, ManufacturerName = "Samsung", ModelName = "Galaxy S9", Price = 3499, Quantity = 2},
+                new Product { Id = 6, ManufacturerName = "Huawei", ModelName = "P9", Price = 1500, Quantity = 4},
             };
         }
 
@@ -43,23 +37,18 @@ namespace WMC.Services
 
         public async Task<IEnumerable<Product>> GetProductsList()
         {
-            HttpClient client = new HttpClient();
-        
-            //string content = await client.GetStringAsync("http://apiIp:8080/products");
-
             return await Task.FromResult(_products);
         }
 
         public async Task<bool> RemoveProduct(long productId)
         {
-            Product product = _products.FirstOrDefault(p => p.Id == productId);
+            var product = _products.FirstOrDefault(p => p.Id == productId);
 
             if (product == null) 
                 return await Task.FromResult(false);
             
             _products.Remove(product);
             return await Task.FromResult(true);
-
         }
 
         public async Task<bool> UpdateProduct(Product updateProduct)
@@ -75,14 +64,14 @@ namespace WMC.Services
             return await Task.FromResult(true);
         }
 
-        public async Task<bool> ChangeProductQuantity(long productId, int intCount)
+        public async Task<bool> ChangeProductQuantity(long productId, long count)
         {
             var product = _products.FirstOrDefault(p => p.Id == productId);
 
             if (product == null) 
                 return await Task.FromResult(false);
             
-            product.Quantity += intCount;
+            product.Quantity += count;
             return await Task.FromResult(true);
         }
     }

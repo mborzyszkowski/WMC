@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WMC.Views.ProductDetailsPage"
+             Title="{Binding Title}"
+             xmlns:local="clr-namespace:WMC.ViewModels"
+             x:DataType="local:ProductDetailsViewModel">
+
+	<ContentPage.ToolbarItems>
+		<ToolbarItem Text="Delete" Command="{Binding DeleteProductCommand}" />
+		<ToolbarItem Text="Edit" Command="{Binding EditProductCommand}" />
+	</ContentPage.ToolbarItems>
+
+	<ContentPage.Content>
+		<StackLayout Spacing="3" Padding="10">
+			<Label Text="Manufacturer name" FontSize="Medium" />
+			<Entry Text="{Binding Product.ManufacturerName}" FontSize="Medium" IsReadOnly="True"/>
+			<Label Text="Model name" FontSize="Medium" />
+			<Entry Text="{Binding Product.ModelName}" FontSize="Medium" IsReadOnly="True"/>
+			<Label Text="Price" FontSize="Medium" />
+			<Entry Text="{Binding Product.Price}" FontSize="Medium" IsReadOnly="True"/>
+			<Label Text="Quantity" FontSize="Medium" />
+			<Entry Text="{Binding Product.Quantity}" FontSize="Medium" IsReadOnly="True"/>
+
+			<StackLayout Orientation="Horizontal">
+				<Entry Text="{Binding IncreaseQuantityNumber, Mode=TwoWay}" FontSize="Medium" HorizontalOptions="FillAndExpand"/>
+				<Button Text="+" Command="{Binding IncreaseQuantityCommand}" FontAttributes="Bold" FontSize="Large" WidthRequest="4" HorizontalOptions="FillAndExpand"/>
+				<Entry Text="{Binding DecreaseQuantityNumber, Mode=TwoWay}" FontSize="Medium" HorizontalOptions="FillAndExpand"/>
+				<Button Text="-" Command="{Binding DecreaseQuantityCommand}" FontAttributes="Bold" FontSize="Large" WidthRequest="4" HorizontalOptions="FillAndExpand"/>
+			</StackLayout>
+		</StackLayout>
+    </ContentPage.Content>
+</ContentPage>

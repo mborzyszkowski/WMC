@@ -5,14 +5,13 @@ using Xamarin.Forms.Xaml;
 namespace WMC.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ProductListPage : ContentPage
+    public partial class ProductDetailsPage : ContentPage
     {
-        private readonly ProductsListViewModel _viewModel;
-
-        public ProductListPage()
+        private readonly ProductDetailsViewModel _viewModel;
+        public ProductDetailsPage()
         {
             InitializeComponent();
-            BindingContext = _viewModel = new ProductsListViewModel();
+            BindingContext = _viewModel = new ProductDetailsViewModel();
         }
 
         protected override void OnAppearing()

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WMC.Views.EditProductPage"
+             Title="{Binding Title}"
+             xmlns:local="clr-namespace:WMC.ViewModels"
+             x:DataType="local:EditProductViewModel">
+    <ContentPage.Content>
+		<StackLayout Spacing="3" Padding="10" >
+			<Label Text="Manufacturer name" FontSize="Medium" />
+			<Entry Text="{Binding ManufacturerName, Mode=TwoWay}" FontSize="Medium" />
+			<Label Text="Model name" FontSize="Medium" />
+			<Entry Text="{Binding ModelName, Mode=TwoWay}" FontSize="Medium" />
+			<Label Text="Price" FontSize="Medium" />
+			<Entry Text="{Binding Price, Mode=TwoWay}" FontSize="Medium" />
+
+			<StackLayout Orientation="Horizontal">
+				<Button Text="Cancel" Command="{Binding CancelCommand}" HorizontalOptions="FillAndExpand"/>
+				<Button Text="Update" Command="{Binding UpdateCommand}" HorizontalOptions="FillAndExpand"/>
+			</StackLayout>
+		</StackLayout>
+	</ContentPage.Content>
+</ContentPage>
