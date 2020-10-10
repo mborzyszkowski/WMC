@@ -1,4 +1,5 @@
 ﻿using System;
+using WMC.Models;
 using WMC.Services;
 using WMC.Views;
 using Xamarin.Forms;
@@ -12,7 +13,8 @@ namespace WMC
         {
             InitializeComponent();
 
-            DependencyService.Register<WarehouseProductsMock>();
+            DependencyService.Register<WarehouseProducts>();
+
             MainPage = new ProductListPage();
         }
 
