@@ -41,7 +41,7 @@ namespace WMC.ViewModels
         async void OnDeleteProduct()
         {
             await Warehouse.RemoveProduct(_productId);
-            await Shell.Current.GoToAsync($"//products");
+            await Shell.Current.GoToAsync($"..");
         }
 
         async void OnIncreaseQuantity()
@@ -83,8 +83,11 @@ namespace WMC.ViewModels
             get => _productId.ToString();
             set
             {
-                _productId = Int64.Parse(value);
-                LoadProduct(_productId);
+                if (Int64.TryParse(value, out long newProductId))
+                {
+                    _productId = newProductId;
+                    LoadProduct(_productId);
+                }
             }
         }
 
