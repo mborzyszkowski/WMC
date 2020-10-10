@@ -77,7 +77,7 @@ namespace WMC.ViewModels
 
         private async void OnCancel()
         {
-            await Shell.Current.GoToAsync($"{nameof(ProductDetailsPage)}?{nameof(ProductDetailsViewModel.ProductId)}={_productId}");
+            await Shell.Current.GoToAsync($"..");
         }
 
         private async void OnUpdate()
@@ -92,7 +92,7 @@ namespace WMC.ViewModels
 
             await Warehouse.UpdateProduct(newProduct);
 
-            await Shell.Current.GoToAsync($"{nameof(ProductDetailsPage)}?{nameof(ProductDetailsViewModel.ProductId)}={_productId}");
+            await Shell.Current.GoToAsync($"..");
         }
     }
 }
