@@ -1,6 +1,6 @@
 ﻿namespace WMC.Models
 {
-    class Product
+    public class Product
     {
         public long Id { get; set; }
         public string ManufacturerName { get; set; }
