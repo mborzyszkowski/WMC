@@ -10,19 +10,41 @@
 		<CollectionView x:Name="ProductsListView" ItemsSource="{Binding Products}" SelectionMode="None">
 			<CollectionView.ItemTemplate>
 				<DataTemplate>
-					<StackLayout Padding="10" x:DataType="model:Product">
-						<Label Text="{Binding ManufacturerName}"
-							   LineBreakMode="NoWrap"
-							   FontSize="16"/>
-						<Label Text="{Binding ModelName}"
-							   LineBreakMode="NoWrap"
-							   FontSize="16"/>
-						<Label Text="{Binding Price}"
-							   LineBreakMode="NoWrap"
-							   FontSize="16"/>
-						<Label Text="{Binding Quantity}"
-							   LineBreakMode="NoWrap"
-							   FontSize="16"/>
+					<StackLayout Orientation="Vertical">
+						<Grid BackgroundColor="White" 
+						      HeightRequest="10"/>
+						<StackLayout Padding="10" 
+						             x:DataType="model:Product" 
+						             Orientation="Vertical"
+						             BackgroundColor="LightBlue">
+							<StackLayout Orientation="Horizontal">
+								<Label Text="{Binding ManufacturerName}"
+								       LineBreakMode="NoWrap"
+								       FontSize="20"/>
+								<Label Text="{Binding ModelName}"
+									   LineBreakMode="NoWrap"
+									   FontSize="20"/>
+							</StackLayout>
+							<StackLayout Orientation="Horizontal">
+								<Label Text="Price: "
+								       LineBreakMode="NoWrap"
+								       FontSize="16"/>
+								<Label Text="{Binding Price}"
+									   LineBreakMode="NoWrap"
+									   FontSize="16"/>
+								<Label Text="PLN"
+								       LineBreakMode="NoWrap"
+								       FontSize="16"/>
+							</StackLayout>
+							<StackLayout Orientation="Horizontal">
+								<Label Text="Quantity:"
+								       LineBreakMode="NoWrap"
+								       FontSize="16"/>
+								<Label Text="{Binding Quantity}"
+								       LineBreakMode="NoWrap"
+								       FontSize="16"/>
+							</StackLayout>
+						</StackLayout>
 					</StackLayout>
 				</DataTemplate>
 			</CollectionView.ItemTemplate>

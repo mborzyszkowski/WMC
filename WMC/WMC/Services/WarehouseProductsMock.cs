@@ -15,7 +15,17 @@ namespace WMC.Services
             _products = new List<Product>
             {
                 new Product { Id = 1, ManufacturerName = "Samsung", ModelName = "Galaxy S9", Price = 3499, Quantity = 2},
-                new Product { Id = 2, ManufacturerName = "Huawei", ModelName = "P9", Price = 1500, Quantity = 4}
+                new Product { Id = 2, ManufacturerName = "Huawei", ModelName = "P9", Price = 1500, Quantity = 4},
+                new Product { Id = 1, ManufacturerName = "Samsung", ModelName = "Galaxy S9", Price = 3499, Quantity = 2},
+                new Product { Id = 2, ManufacturerName = "Huawei", ModelName = "P9", Price = 1500, Quantity = 4},
+                new Product { Id = 1, ManufacturerName = "Samsung", ModelName = "Galaxy S9", Price = 3499, Quantity = 2},
+                new Product { Id = 2, ManufacturerName = "Huawei", ModelName = "P9", Price = 1500, Quantity = 4},
+                new Product { Id = 1, ManufacturerName = "Samsung", ModelName = "Galaxy S9", Price = 3499, Quantity = 2},
+                new Product { Id = 2, ManufacturerName = "Huawei", ModelName = "P9", Price = 1500, Quantity = 4},
+                new Product { Id = 1, ManufacturerName = "Samsung", ModelName = "Galaxy S9", Price = 3499, Quantity = 2},
+                new Product { Id = 2, ManufacturerName = "Huawei", ModelName = "P9", Price = 1500, Quantity = 4},
+                new Product { Id = 1, ManufacturerName = "Samsung", ModelName = "Galaxy S9", Price = 3499, Quantity = 2},
+                new Product { Id = 2, ManufacturerName = "Huawei", ModelName = "P9", Price = 1500, Quantity = 4},
             };
         }
 
