@@ -9,7 +9,7 @@ namespace WMC
         {
             InitializeComponent();
 
-            DependencyService.Register<WarehouseProductsMock>();
+            DependencyService.Register<WarehouseProducts>();
 
             MainPage = new AppShell();
         }
