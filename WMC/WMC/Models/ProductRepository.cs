@@ -80,7 +80,7 @@ namespace WMC.Models
         {
             var url = new Uri($"{_baseUrl}/{productId}");
 
-            var response = await _httpClient.GetAsync(url);
+            var response = await _httpClient.DeleteAsync(url);
 
             return response.IsSuccessStatusCode;
         }
@@ -89,7 +89,7 @@ namespace WMC.Models
         {
             var url = new Uri($"{_baseUrl}/{productId}/{count}");
 
-            var response = await _httpClient.GetAsync(url);
+            var response = await _httpClient.PutAsync(url, null);
 
             return response.IsSuccessStatusCode;
         }

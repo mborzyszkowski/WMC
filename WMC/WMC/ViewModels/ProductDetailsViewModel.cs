@@ -40,8 +40,13 @@ namespace WMC.ViewModels
 
         async void OnDeleteProduct()
         {
-            await Warehouse.RemoveProduct(_productId);
-            await Shell.Current.GoToAsync($"..");
+            var deletionConfirmed = await Application.Current.MainPage.DisplayAlert("Delete product", "Are you sure?", "Yes", "No");
+
+            if (deletionConfirmed)
+            {
+                await Warehouse.RemoveProduct(_productId);
+                await Shell.Current.GoToAsync($"..");
+            }
         }
 
         async void OnIncreaseQuantity()

@@ -23,10 +23,14 @@
 			<Entry Text="{Binding Product.Quantity}" FontSize="Medium" IsReadOnly="True"/>
 
 			<StackLayout Orientation="Horizontal">
-				<Entry Text="{Binding IncreaseQuantityNumber, Mode=TwoWay}" FontSize="Medium" HorizontalOptions="FillAndExpand"/>
-				<Button Text="+" Command="{Binding IncreaseQuantityCommand}" FontAttributes="Bold" FontSize="Large" WidthRequest="4" HorizontalOptions="FillAndExpand"/>
-				<Entry Text="{Binding DecreaseQuantityNumber, Mode=TwoWay}" FontSize="Medium" HorizontalOptions="FillAndExpand"/>
-				<Button Text="-" Command="{Binding DecreaseQuantityCommand}" FontAttributes="Bold" FontSize="Large" WidthRequest="4" HorizontalOptions="FillAndExpand"/>
+				<Entry Text="{Binding IncreaseQuantityNumber, Mode=TwoWay}" 
+				       FontSize="Medium" HorizontalOptions="FillAndExpand" Keyboard="Numeric"/>
+				<Button Text="+" Command="{Binding IncreaseQuantityCommand}" 
+				        FontAttributes="Bold" FontSize="Large" WidthRequest="4" HorizontalOptions="FillAndExpand"/>
+				<Entry Text="{Binding DecreaseQuantityNumber, Mode=TwoWay}" 
+				       FontSize="Medium" HorizontalOptions="FillAndExpand" Keyboard="Numeric"/>
+				<Button Text="-" Command="{Binding DecreaseQuantityCommand}" 
+				        FontAttributes="Bold" FontSize="Large" WidthRequest="4" HorizontalOptions="FillAndExpand"/>
 			</StackLayout>
 		</StackLayout>
     </ContentPage.Content>
