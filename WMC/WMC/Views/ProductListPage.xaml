@@ -17,45 +17,49 @@
 					<StackLayout Orientation="Vertical">
 						<Grid BackgroundColor="White" 
 						      HeightRequest="10"/>
-						<StackLayout Padding="10" 
-						             x:DataType="model:Product" 
-						             Orientation="Vertical"
-						             BackgroundColor="LightBlue">
-							<StackLayout Orientation="Horizontal">
-								<Label Text="{Binding ManufacturerName}"
-								       LineBreakMode="NoWrap"
-								       FontSize="20"/>
-								<Label Text="{Binding ModelName}"
-									   LineBreakMode="NoWrap"
-									   FontSize="20"/>
+						<Frame CornerRadius="15"  
+						       Padding="0"
+						       BorderColor="Black">
+							<StackLayout Padding="10" 
+							             x:DataType="model:Product" 
+							             Orientation="Vertical"
+							             BackgroundColor="#E8E8E8">
+								<StackLayout Orientation="Horizontal">
+									<Label Text="{Binding ManufacturerName}"
+									       LineBreakMode="NoWrap"
+									       FontSize="20"/>
+									<Label Text="{Binding ModelName}"
+										   LineBreakMode="NoWrap"
+										   FontSize="20"/>
+								</StackLayout>
+								<StackLayout Orientation="Horizontal">
+									<Label Text="Price: "
+									       LineBreakMode="NoWrap"
+									       FontSize="16"/>
+									<Label Text="{Binding Price}"
+										   LineBreakMode="NoWrap"
+										   FontSize="16"/>
+									<Label Text="PLN"
+									       LineBreakMode="NoWrap"
+									       FontSize="16"/>
+								</StackLayout>
+								<StackLayout Orientation="Horizontal">
+									<Label Text="Quantity:"
+									       LineBreakMode="NoWrap"
+									       FontSize="16"/>
+									<Label Text="{Binding Quantity}"
+									       LineBreakMode="NoWrap"
+									       FontSize="16"/>
+								</StackLayout>
+								<StackLayout.GestureRecognizers>
+									<TapGestureRecognizer 
+										NumberOfTapsRequired="1"
+										Command="{Binding Source={RelativeSource AncestorType={x:Type local:ProductsListViewModel}}, Path=ProductTapped}"		
+										CommandParameter="{Binding .}">
+									</TapGestureRecognizer>
+								</StackLayout.GestureRecognizers>
 							</StackLayout>
-							<StackLayout Orientation="Horizontal">
-								<Label Text="Price: "
-								       LineBreakMode="NoWrap"
-								       FontSize="16"/>
-								<Label Text="{Binding Price}"
-									   LineBreakMode="NoWrap"
-									   FontSize="16"/>
-								<Label Text="PLN"
-								       LineBreakMode="NoWrap"
-								       FontSize="16"/>
-							</StackLayout>
-							<StackLayout Orientation="Horizontal">
-								<Label Text="Quantity:"
-								       LineBreakMode="NoWrap"
-								       FontSize="16"/>
-								<Label Text="{Binding Quantity}"
-								       LineBreakMode="NoWrap"
-								       FontSize="16"/>
-							</StackLayout>
-							<StackLayout.GestureRecognizers>
-								<TapGestureRecognizer 
-									NumberOfTapsRequired="1"
-									Command="{Binding Source={RelativeSource AncestorType={x:Type local:ProductsListViewModel}}, Path=ProductTapped}"		
-									CommandParameter="{Binding .}">
-								</TapGestureRecognizer>
-							</StackLayout.GestureRecognizers>
-						</StackLayout>
+						</Frame>
 					</StackLayout>
 				</DataTemplate>
 			</CollectionView.ItemTemplate>
