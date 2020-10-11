@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using WMC.Services;
 using Xamarin.Forms;
 
 namespace WMC.Models
@@ -12,13 +13,12 @@ namespace WMC.Models
     {
         private readonly HttpClient _httpClient;
 
-        // TODO: later https://10.0.2.2/products and add 
         private readonly string _baseUrl = 
-            Device.RuntimePlatform == Device.Android ? "http://192.168.2.122:8080/products" : "http://localhost:8080/products";
+            Device.RuntimePlatform == Device.Android ? "https://192.168.2.122:44349/products" : "https://localhost:44349/products";
 
         public ProductRepository()
         {
-            _httpClient = new HttpClient();
+            _httpClient = new HttpClient(DependencyService.Get<IHttpClientHandlerService>().GetInsecureHandler());
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
         }
 
