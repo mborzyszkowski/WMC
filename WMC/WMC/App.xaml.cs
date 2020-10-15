@@ -1,4 +1,5 @@
 ﻿using WMC.Services;
+using WMC.Views;
 using Xamarin.Forms;
 
 namespace WMC
@@ -11,7 +12,7 @@ namespace WMC
 
             DependencyService.Register<WarehouseProducts>();
 
-            MainPage = new AppShell();
+            MainPage = new LoginChooserPage();
         }
 
         protected override void OnStart()

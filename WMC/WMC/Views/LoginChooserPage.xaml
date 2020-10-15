@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WMC.Views.LoginChooserPage"
+             xmlns:local="clr-namespace:WMC.ViewModels"
+             x:DataType="local:LoginChooserViewModel">
+	<StackLayout>
+
+		<Button Text="Login with facebook" 
+				FontSize="Title"
+		        FontAttributes="Bold"
+		        Padding="20"
+		        Command="{Binding FacebookLoginCommand}"/>
+
+		<WebView x:Name="WebView" HeightRequest="10" WidthRequest="10"
+		         VerticalOptions="FillAndExpand"/>
+
+		<Button Text="Login with WMC" 
+		        FontSize="Title"
+				FontAttributes="Bold"
+		        Padding="20"
+		        Command="{Binding WmcLoginCommand}"/>
+
+	</StackLayout>
+</ContentPage>
