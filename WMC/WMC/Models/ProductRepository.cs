@@ -14,7 +14,7 @@ namespace WMC.Models
         private readonly HttpClient _httpClient;
 
         private readonly string _baseUrl = 
-            Device.RuntimePlatform == Device.Android ? "https://192.168.2.122:44349/products" : "https://localhost:44349/products";
+            Device.RuntimePlatform == Device.Android ? Constants.ApiEndpointForAndroid : Constants.ApiEndpointForIos;
 
         public ProductRepository()
         {
