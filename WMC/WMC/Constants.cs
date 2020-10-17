@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using static System.String;
 
 namespace WMC
 {
@@ -18,6 +16,6 @@ namespace WMC
             $"https://www.facebook.com/v7.0/dialog/oauth?client_id={FacebookAndroidClientId}&response_type=token&redirect_uri={FacebookAndroidRedirectUrl}";
 
         public static string ExstractToken(string resUrl) =>
-            resUrl.Replace("https://www.facebook.com/connect/login_success.html#access_token=", String.Empty).Split('&')[0];
+            resUrl.Replace("https://www.facebook.com/connect/login_success.html#access_token=", Empty).Split('&')[0];
     }
 }

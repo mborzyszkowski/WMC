@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using WMC.Views;
+﻿using WMC.Views;
 using Xamarin.Forms;
-using IAsyncResult = System.IAsyncResult;
 
 namespace WMC.ViewModels
 {

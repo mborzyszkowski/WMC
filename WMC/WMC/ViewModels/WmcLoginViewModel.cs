@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using WMC.Views;
+﻿using WMC.Views;
 using Xamarin.Forms;
 
 namespace WMC.ViewModels
