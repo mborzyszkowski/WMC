@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WMC.Repositories;
 using Xamarin.Forms;
 
@@ -15,5 +16,8 @@ namespace WMC.Models
 
         public async Task<WmcToken> GetAuthenticationToken() => 
             await _authorisationRepository.AuthenticateWithFacebook(_facebookToken);
+
+        public async Task<IEnumerable<string>> GetUserRoles(WmcToken token) =>
+            await _authorisationRepository.GetUserRoles(token);
     }
 }

@@ -4,7 +4,8 @@
              x:Class="WMC.Views.NewProductPage"
              Title="{Binding Title}"
              xmlns:local="clr-namespace:WMC.ViewModels"
-             x:DataType="local:NewProductViewModel">
+             x:DataType="local:NewProductViewModel"
+             BackgroundColor="White">
 	<ContentPage.Content>
         <StackLayout Spacing="3" Padding="10" >
 			<Label Text="Manufacturer name" FontSize="Medium" />

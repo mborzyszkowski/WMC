@@ -4,9 +4,12 @@
              x:Class="WMC.Views.ProductListPage"
 			 Title="{Binding Title}"
 			 xmlns:local="clr-namespace:WMC.ViewModels"
-			 xmlns:model="clr-namespace:WMC.Models">
+			 xmlns:model="clr-namespace:WMC.Models"
+             x:DataType="local:ProductsListViewModel"
+             BackgroundColor="White">
 
 	<ContentPage.ToolbarItems>
+		<ToolbarItem Text="Logout" Command="{Binding LogoutCommand}"/>
 		<ToolbarItem Text="Add" Command="{Binding AddProductCommand}" />
 	</ContentPage.ToolbarItems>
 
