@@ -5,8 +5,11 @@ namespace WMC.Services
 {
     public interface IAuthenticationService
     {
-         void AuthenticateWithFacebook(string authenticationToken);
-         void AuthenticateWithWmc(string userName, string password);
-         Task<WmcToken> GetToken();
+        bool IsManager();
+        bool IsEmployee();
+        void Logout();
+        void AuthenticateWithFacebook(string authenticationToken);
+        void AuthenticateWithWmc(string userName, string password);
+        Task<WmcToken> GetToken();
     }
 }

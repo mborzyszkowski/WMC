@@ -3,14 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="WMC.Views.LoginChooserPage"
              xmlns:local="clr-namespace:WMC.ViewModels"
-             x:DataType="local:LoginChooserViewModel">
-	<StackLayout>
+             x:DataType="local:LoginChooserViewModel"
+             BackgroundColor="White">
+	<StackLayout VerticalOptions="Center">
 
 		<Button Text="Login with facebook" 
 				FontSize="Title"
 		        FontAttributes="Bold"
 		        Padding="20"
-				
 				Command="{Binding LoginWithFacebookCommand}"/>
 
 		<Button Text="Login with WMC" 

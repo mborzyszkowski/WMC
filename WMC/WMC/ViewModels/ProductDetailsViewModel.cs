@@ -19,7 +19,7 @@ namespace WMC.ViewModels
             Title = "Product details";
 
             EditProductCommand = new Command(OnEditProduct);
-            DeleteProductCommand = new Command(OnDeleteProduct);
+            DeleteProductCommand = new Command(OnDeleteProduct, () => AuthenticationService.IsManager());
             IncreaseQuantityCommand = new Command(OnIncreaseQuantity, ValidateIncreaseQuantity);
             DecreaseQuantityCommand = new Command(OnDecreaseQuantity, ValidateDecreaseQuantity);
             PropertyChanged += (_, __) =>

@@ -4,7 +4,8 @@
              x:Class="WMC.Views.ProductDetailsPage"
              Title="{Binding Title}"
              xmlns:local="clr-namespace:WMC.ViewModels"
-             x:DataType="local:ProductDetailsViewModel">
+             x:DataType="local:ProductDetailsViewModel"
+             BackgroundColor="White">
 
 	<ContentPage.ToolbarItems>
 		<ToolbarItem Text="Delete" Command="{Binding DeleteProductCommand}" />

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -61,6 +63,26 @@ namespace WMC.Repositories
             }
 
             return null;
+        }
+
+        public async Task<IEnumerable<string>> GetUserRoles(WmcToken token)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token.Token);
+
+            var url = new Uri($"{_baseUrl}/role");
+
+            var response = await _httpClient.GetAsync(url);
+
+            _httpClient.DefaultRequestHeaders.Authorization = null;
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<string>>(content);
+            }
+
+            return new List<string>();
         }
     }
 }

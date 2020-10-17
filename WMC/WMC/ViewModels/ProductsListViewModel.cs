@@ -31,11 +31,13 @@ namespace WMC.ViewModels
             Products = new ObservableCollection<Product>();
 
             LoadProductsCommand = new Command(async () => await OnLoadProduct());
+            LogoutCommand = new Command(OnLogout);
             AddProductCommand = new Command(OnAddProduct);
             ProductTapped = new Command<Product>(OnProductTapped);
         }
 
         public Command LoadProductsCommand { get; }
+        public Command LogoutCommand { get; }
         public Command AddProductCommand { get; }
         public Command<Product> ProductTapped { get; }
 
@@ -57,6 +59,13 @@ namespace WMC.ViewModels
             {
                 IsBusy = false;
             }
+        }
+
+        private void OnLogout()
+        {
+            AuthenticationService.Logout();
+            Application.Current.MainPage = new LoginChooserPage();
+            GC.Collect();
         }
 
         async void OnAddProduct()
