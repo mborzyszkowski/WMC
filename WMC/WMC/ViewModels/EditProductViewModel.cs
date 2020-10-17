@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using WMC.Models;
-using WMC.Views;
 using Xamarin.Forms;
 
 namespace WMC.ViewModels

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace WMC.Services
+namespace WMC.Repositories
 {
-    public interface IWarehouseProducts<T>
+    public interface IProductRepository<T>
     {
         Task<bool> AddProduct(T product);
         Task<bool> RemoveProduct(long productId);

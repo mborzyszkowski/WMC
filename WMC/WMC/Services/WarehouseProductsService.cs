@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WMC.Models;
+using WMC.Repositories;
 
 namespace WMC.Services
 {
-    public class WarehouseProducts : IWarehouseProducts<Product>
+    public class WarehouseProductsService : IWarehouseProductsService<Product>
     {
         private readonly IProductRepository<Product> _repository = new ProductRepository();
 

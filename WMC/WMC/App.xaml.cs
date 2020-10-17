@@ -1,4 +1,7 @@
-﻿using WMC.Services;
+﻿using WMC.Models;
+using WMC.Repositories;
+using WMC.Services;
+using WMC.Views;
 using Xamarin.Forms;
 
 namespace WMC
@@ -9,9 +12,11 @@ namespace WMC
         {
             InitializeComponent();
 
-            DependencyService.Register<WarehouseProducts>();
+            DependencyService.Register<WarehouseProductsService>();
+            DependencyService.Register<AuthorisationRepository>();
+            DependencyService.Register<AuthenticationService>();
 
-            MainPage = new AppShell();
+            MainPage = new LoginChooserPage();
         }
 
         protected override void OnStart()
