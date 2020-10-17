@@ -10,16 +10,14 @@
 				FontSize="Title"
 		        FontAttributes="Bold"
 		        Padding="20"
-		        Command="{Binding FacebookLoginCommand}"/>
-
-		<WebView x:Name="WebView" HeightRequest="10" WidthRequest="10"
-		         VerticalOptions="FillAndExpand"/>
+				
+				Command="{Binding LoginWithFacebookCommand}"/>
 
 		<Button Text="Login with WMC" 
 		        FontSize="Title"
-				FontAttributes="Bold"
+		        FontAttributes="Bold"
 		        Padding="20"
-		        Command="{Binding WmcLoginCommand}"/>
+		        Command="{Binding LoginWithWmcCommand}"/>
 
 	</StackLayout>
 </ContentPage>
