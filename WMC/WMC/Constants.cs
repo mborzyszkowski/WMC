@@ -7,8 +7,8 @@ namespace WMC
     public static class Constants
     {
         // API
-        public static string ApiEndpointForAndroid = "https://192.168.2.122:44349/products";
-        public static string ApiEndpointForIos = "https://localhost:44349/products";
+        public static string ApiEndpointForAndroid = "https://192.168.2.122:44349";
+        public static string ApiEndpointForIos = "https://localhost:44349";
 
         // Google OAuth
         public static string FacebookAndroidClientId = "781198405780872";

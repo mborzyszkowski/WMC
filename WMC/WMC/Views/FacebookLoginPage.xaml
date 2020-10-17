@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WMC.Views.FacebookLoginPage"
+             xmlns:local="clr-namespace:WMC.ViewModels"
+             x:DataType="local:FacebookLoginViewModel">
+    <ContentPage.Content>
+		<StackLayout>
+			<Button Text="Cancel" 
+			        FontSize="Title"
+			        FontAttributes="Bold"
+			        Padding="20"
+			        Command="{Binding CancelCommand}"/>
+
+			<WebView x:Name="WebView" HeightRequest="10" WidthRequest="10"
+			         VerticalOptions="FillAndExpand"/>
+		</StackLayout>
+	</ContentPage.Content>
+</ContentPage>

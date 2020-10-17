@@ -6,11 +6,11 @@ using WMC.Models;
 
 namespace WMC.Services
 {
-    public class WarehouseProductsMock : IWarehouseProducts<Product>
+    public class WarehouseProductsServiceMock : IWarehouseProductsService<Product>
     {
         readonly List<Product> _products;
 
-        public WarehouseProductsMock()
+        public WarehouseProductsServiceMock()
         {
             _products = new List<Product>
             {

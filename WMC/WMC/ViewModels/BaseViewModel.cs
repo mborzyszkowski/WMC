@@ -10,7 +10,8 @@ namespace WMC.ViewModels
 {
     class BaseViewModel : INotifyPropertyChanged
     {
-        public IWarehouseProducts<Product> Warehouse => DependencyService.Get<IWarehouseProducts<Product>>();
+        public IWarehouseProductsService<Product> Warehouse => DependencyService.Get<IWarehouseProductsService<Product>>();
+        public IAuthenticationService AuthenticationService => DependencyService.Get<IAuthenticationService>();
 
         bool _isBusy = false;
         public bool IsBusy
