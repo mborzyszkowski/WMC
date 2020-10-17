@@ -13,7 +13,7 @@ namespace WMC.ViewModels
         public IWarehouseProductsService<Product> Warehouse => DependencyService.Get<IWarehouseProductsService<Product>>();
         public IAuthenticationService AuthenticationService => DependencyService.Get<IAuthenticationService>();
 
-        bool _isBusy = false;
+        private bool _isBusy;
         public bool IsBusy
         {
             get => _isBusy;

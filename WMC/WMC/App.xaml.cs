@@ -1,5 +1,4 @@
-﻿using WMC.Models;
-using WMC.Repositories;
+﻿using WMC.Repositories;
 using WMC.Services;
 using WMC.Views;
 using Xamarin.Forms;
