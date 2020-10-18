@@ -29,7 +29,8 @@ namespace WMC.ViewModels
             }
             else
             {
-                // TODO: unauthorise or no internet connection
+                Application.Current.MainPage
+                    .DisplayAlert("Login error", "Incorrect login credentials", "Ok");
             }
         }
 
