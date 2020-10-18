@@ -20,19 +20,17 @@ namespace WMC.ViewModels
 
         private async void OnNavigated(object sender, WebNavigatedEventArgs e)
         {
-            var AccessURL = e.Url;
+            var accessUrl = e.Url;
 
-            if (AccessURL.Contains("access_token"))
+            if (accessUrl.Contains("access_token"))
             {
-                var accessToken = Constants.ExstractToken(AccessURL);
+                var accessToken = Constants.ExstractToken(accessUrl);
 
                 _webView.Navigated -= OnNavigated;
 
                 AuthenticationService.AuthenticateWithFacebook(accessToken);
 
                 var tokent = await AuthenticationService.GetToken();
-
-                // TODO: unauthorise or no internet connection
 
                 Application.Current.MainPage = new AppShell();
             }

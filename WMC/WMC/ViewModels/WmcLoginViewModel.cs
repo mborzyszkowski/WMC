@@ -29,7 +29,7 @@ namespace WMC.ViewModels
             }
             else
             {
-                Application.Current.MainPage
+                await Application.Current.MainPage
                     .DisplayAlert("Login error", "Incorrect login credentials", "Ok");
             }
         }
