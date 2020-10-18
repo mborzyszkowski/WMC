@@ -17,7 +17,7 @@ namespace WMC.ViewModels
         public Command CancelCommand { get; }
         public Command LoginCommand { get; }
 
-        bool CanExecuteLogin() => 
+        private bool CanExecuteLogin() => 
             string.IsNullOrWhiteSpace(_name) && string.IsNullOrWhiteSpace(_password);
 
         public async void OnLogin()
