@@ -21,7 +21,7 @@ namespace WMC.Repositories
 
         public ProductRepository()
         {
-            _httpClient = new HttpClient(DependencyService.Get<IHttpClientHandlerService>().GetInsecureHandler());
+            _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
         }
 

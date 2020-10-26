@@ -15,8 +15,6 @@ namespace WMC
             DependencyService.Register<AuthorisationRepository>();
             DependencyService.Register<AuthenticationService>();
 
-            var authRepo = DependencyService.Get<IAuthenticationService>();
-
             MainPage = new LoginChooserPage();
         }
 

@@ -22,18 +22,18 @@ namespace WMC.ViewModels
         {
             var accessUrl = e.Url;
 
-            if (accessUrl.Contains("access_token"))
+            if (!accessUrl.Contains("access_token"))
             {
-                var accessToken = Constants.ExstractToken(accessUrl);
-
-                _webView.Navigated -= OnNavigated;
-
-                AuthenticationService.AuthenticateWithFacebook(accessToken);
-
-                var tokent = await AuthenticationService.GetToken();
-
-                Application.Current.MainPage = new AppShell();
+                return;
             }
+
+            var accessToken = Constants.ExstractToken(accessUrl);
+
+            _webView.Navigated -= OnNavigated;
+
+            await AuthenticationService.AuthenticateWithFacebook(accessToken);
+
+            Application.Current.MainPage = new AppShell();
         }
     }
 }

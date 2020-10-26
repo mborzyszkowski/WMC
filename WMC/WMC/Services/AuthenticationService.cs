@@ -2,14 +2,16 @@
 using System.Linq;
 using System.Threading.Tasks;
 using WMC.Models;
+using WMC.Repositories;
+using Xamarin.Forms;
 
 namespace WMC.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private IAuthenticator _authenticator;
         private WmcToken _token;
         private IEnumerable<string> _userRoles = new List<string>();
+        private readonly IAuthorisationRepository _authorisationRepository = DependencyService.Get<IAuthorisationRepository>();
 
         public bool IsManager() => _userRoles.Contains("manager");
 
@@ -17,26 +19,43 @@ namespace WMC.Services
 
         public void Logout()
         {
-            _authenticator = null;
             _token = null;
             _userRoles = new List<string>();
         }
 
-        public void AuthenticateWithFacebook(string authenticationToken) => 
-            _authenticator = new FacebookAuthenticator(authenticationToken);
+        public async Task AuthenticateWithFacebook(string authenticationToken)
+        {
+            _token = await _authorisationRepository.AuthenticateWithFacebook(authenticationToken);
+            await RefreshRoles();
+        }
 
-        public void AuthenticateWithWmc(string userName, string password) => 
-            _authenticator = new WmcAuthenticator(userName, password);
+        public async Task AuthenticateWithWmc(string userName, string password)
+        {
+            _token = await _authorisationRepository.AuthenticateWithWmc(userName, password);
+            await RefreshRoles();
+        }
 
         public async Task<WmcToken> GetToken()
         {
-            if (_token == null || _token.IsTokenExpired)
+            if (_token != null && _token.IsTokenExpired)
             {
-                _token = await _authenticator.GetAuthenticationToken();
-                _userRoles = _token != null ? await _authenticator.GetUserRoles(_token.GeTokenCopy()) : new List<string>();
+                _token = await _authorisationRepository.RefreshToken(_token.GeTokenCopy());
+                await RefreshRoles();
             }
 
-            return _token != null ? _token.GeTokenCopy() : null;
+            return _token?.GeTokenCopy();
+        }
+
+        private async Task RefreshRoles()
+        {
+            if (_token != null)
+            {
+                _userRoles = await _authorisationRepository.GetUserRoles(_token.GeTokenCopy());
+            }
+            else
+            {
+                _userRoles = new List<string>();
+            }
         }
     }
 }
