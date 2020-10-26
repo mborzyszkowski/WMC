@@ -8,8 +8,8 @@ namespace WMC.Services
         bool IsManager();
         bool IsEmployee();
         void Logout();
-        void AuthenticateWithFacebook(string authenticationToken);
-        void AuthenticateWithWmc(string userName, string password);
+        Task AuthenticateWithFacebook(string authenticationToken);
+        Task AuthenticateWithWmc(string userName, string password);
         Task<WmcToken> GetToken();
     }
 }

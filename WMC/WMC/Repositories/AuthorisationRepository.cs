@@ -11,7 +11,7 @@ using Xamarin.Forms;
 
 namespace WMC.Repositories
 {
-    class AuthorisationRepository : IAuthorisationRepository
+    public class AuthorisationRepository : IAuthorisationRepository
     {
         private readonly HttpClient _httpClient;
 
@@ -21,7 +21,7 @@ namespace WMC.Repositories
 
         public AuthorisationRepository()
         {
-            _httpClient = new HttpClient(DependencyService.Get<IHttpClientHandlerService>().GetInsecureHandler());
+            _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
         }
 
@@ -39,7 +39,7 @@ namespace WMC.Repositories
             {
                 var tokenContent = await response.Content.ReadAsStringAsync();
                 var token = JsonConvert.DeserializeObject<WmcTokenUnsafe>(tokenContent);
-                return WmcToken.CreateToken(token.Token, token.ExpirationDate);
+                return WmcToken.CreateToken(token.Token, token.RefreshToken, token.ExpirationDate);
             }
 
             return null;
@@ -59,7 +59,7 @@ namespace WMC.Repositories
             {
                 var tokenContent = await response.Content.ReadAsStringAsync();
                 var token = JsonConvert.DeserializeObject<WmcTokenUnsafe>(tokenContent);
-                return WmcToken.CreateToken(token.Token, token.ExpirationDate);
+                return WmcToken.CreateToken(token.Token, token.RefreshToken, token.ExpirationDate);
             }
 
             return null;
@@ -83,6 +83,26 @@ namespace WMC.Repositories
             }
 
             return new List<string>();
+        }
+
+        public async Task<WmcToken> RefreshToken(WmcToken previousToken)
+        {
+            var url = new Uri($"{_baseUrl}/token/refresh");
+
+            var body = JsonConvert.SerializeObject(new RefreshTokenForm { Token = previousToken.RefreshToken });
+
+            var contentBody = new StringContent(body, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(url, contentBody);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var tokenContent = await response.Content.ReadAsStringAsync();
+                var token = JsonConvert.DeserializeObject<WmcTokenUnsafe>(tokenContent);
+                return WmcToken.CreateToken(token.Token, token.RefreshToken, token.ExpirationDate);
+            }
+
+            return null;
         }
     }
 }

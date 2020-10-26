@@ -22,7 +22,8 @@ namespace WMC.ViewModels
 
         public async void OnLogin()
         {
-            AuthenticationService.AuthenticateWithWmc(_name, _password);
+            await AuthenticationService.AuthenticateWithWmc(_name, _password);
+
             if (await AuthenticationService.GetToken() != null)
             {
                 Application.Current.MainPage = new AppShell();
