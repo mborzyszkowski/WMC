@@ -18,12 +18,20 @@ namespace WMC.Models
             };
         }
 
-        public WmcToken GeTokenCopy()
+        public bool IsTokenExpired =>
+            ExpirationDate < DateTime.UtcNow.AddMinutes(1);
+
+        public WmcToken GetTokenCopy()
         {
             return CreateToken(Token, RefreshToken, ExpirationDate);
         }
 
-        public bool IsTokenExpired =>
-            ExpirationDate < DateTime.UtcNow;
+        public WmcTokenUnsafe GetUnsafeCopy() =>
+            new WmcTokenUnsafe
+            {
+                Token = Token,
+                RefreshToken = RefreshToken,
+                ExpirationDate = ExpirationDate,
+            };
     }
 }
