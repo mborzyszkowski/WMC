@@ -33,15 +33,15 @@ namespace WMC.Services
         public async Task AuthenticateWithFacebook(string authenticationToken)
         {
             _token = await _authorisationRepository.AuthenticateWithFacebook(authenticationToken);
-            await RefreshStoredData();
             await RefreshRoles();
+            await RefreshStoredData();
         }
 
         public async Task AuthenticateWithWmc(string userName, string password)
         {
             _token = await _authorisationRepository.AuthenticateWithWmc(userName, password);
-            await RefreshStoredData();
             await RefreshRoles();
+            await RefreshStoredData();
         }
 
         public async Task<WmcToken> GetToken()
