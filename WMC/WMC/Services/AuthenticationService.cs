@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using WMC.Models;
@@ -14,6 +15,7 @@ namespace WMC.Services
         private WmcToken _token;
         private IEnumerable<string> _userRoles = new List<string>();
         private readonly IAuthorisationRepository _authorisationRepository = DependencyService.Get<IAuthorisationRepository>();
+        private static SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
         public bool IsManager() => _userRoles.Contains("manager");
 
@@ -32,25 +34,52 @@ namespace WMC.Services
 
         public async Task AuthenticateWithFacebook(string authenticationToken)
         {
-            _token = await _authorisationRepository.AuthenticateWithFacebook(authenticationToken);
-            await RefreshRoles();
-            await RefreshStoredData();
+            await _semaphore.WaitAsync();
+            try
+            {
+                _token = await _authorisationRepository.AuthenticateWithFacebook(authenticationToken);
+                await RefreshRoles();
+                await RefreshStoredData();
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
 
         public async Task AuthenticateWithWmc(string userName, string password)
         {
-            _token = await _authorisationRepository.AuthenticateWithWmc(userName, password);
-            await RefreshRoles();
-            await RefreshStoredData();
+            await _semaphore.WaitAsync();
+            try
+            {
+                _token = await _authorisationRepository.AuthenticateWithWmc(userName, password);
+                await RefreshRoles();
+                await RefreshStoredData();
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
 
         public async Task<WmcToken> GetToken()
         {
-            if (_token != null && _token.IsTokenExpired)
+            if (_token == null || !_token.IsTokenExpired) 
+                return _token?.GetTokenCopy();
+
+            await _semaphore.WaitAsync();
+            try
             {
-                _token = await _authorisationRepository.RefreshToken(_token.GetTokenCopy());
-                await RefreshRoles();
-                await RefreshStoredData();
+                if (_token != null && _token.IsTokenExpired)
+                {
+                    _token = await _authorisationRepository.RefreshToken(_token.GetTokenCopy());
+                    await RefreshRoles();
+                    await RefreshStoredData();
+                }
+            }
+            finally
+            {
+                _semaphore.Release();
             }
 
             return _token?.GetTokenCopy();
