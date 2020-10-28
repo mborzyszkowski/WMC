@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using WMC.Models;
@@ -13,52 +11,55 @@ namespace WMC.Services
     public class AuthenticationService : IAuthenticationService
     {
         private WmcToken _token;
-        private IEnumerable<string> _userRoles = new List<string>();
+        private UserInfo _userInfo;
         private readonly IAuthorisationRepository _authorisationRepository = DependencyService.Get<IAuthorisationRepository>();
-        private static SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+        private static readonly SemaphoreSlim Semaphore = new SemaphoreSlim(1, 1);
 
-        public bool IsManager() => _userRoles.Contains("manager");
+        public bool IsManager() => _userInfo != null && _userInfo.Roles.Contains("manager");
 
-        public bool IsEmployee() => _userRoles.Contains("employee");
-        public void SetupToken(WmcToken token, List<string> list)
+        public bool IsEmployee() => _userInfo != null && _userInfo.Roles.Contains("employee");
+
+        public string GetUserName() => _userInfo != null ? _userInfo.Username : "";
+
+        public void SetupAuthenticationData(WmcToken token, UserInfo userInfo)
         {
             _token = token;
-            _userRoles = list;
+            _userInfo = userInfo;
         }
 
         public void Logout()
         {
             _token = null;
-            _userRoles = new List<string>();
+            _userInfo = null;
         }
 
         public async Task AuthenticateWithFacebook(string authenticationToken)
         {
-            await _semaphore.WaitAsync();
+            await Semaphore.WaitAsync();
             try
             {
                 _token = await _authorisationRepository.AuthenticateWithFacebook(authenticationToken);
-                await RefreshRoles();
+                await RefreshUserInfo();
                 await RefreshStoredData();
             }
             finally
             {
-                _semaphore.Release();
+                Semaphore.Release();
             }
         }
 
         public async Task AuthenticateWithWmc(string userName, string password)
         {
-            await _semaphore.WaitAsync();
+            await Semaphore.WaitAsync();
             try
             {
                 _token = await _authorisationRepository.AuthenticateWithWmc(userName, password);
-                await RefreshRoles();
+                await RefreshUserInfo();
                 await RefreshStoredData();
             }
             finally
             {
-                _semaphore.Release();
+                Semaphore.Release();
             }
         }
 
@@ -67,33 +68,33 @@ namespace WMC.Services
             if (_token == null || !_token.IsTokenExpired) 
                 return _token?.GetTokenCopy();
 
-            await _semaphore.WaitAsync();
+            await Semaphore.WaitAsync();
             try
             {
                 if (_token != null && _token.IsTokenExpired)
                 {
                     _token = await _authorisationRepository.RefreshToken(_token.GetTokenCopy());
-                    await RefreshRoles();
+                    await RefreshUserInfo();
                     await RefreshStoredData();
                 }
             }
             finally
             {
-                _semaphore.Release();
+                Semaphore.Release();
             }
 
             return _token?.GetTokenCopy();
         }
 
-        private async Task RefreshRoles()
+        private async Task RefreshUserInfo()
         {
             if (_token != null)
             {
-                _userRoles = await _authorisationRepository.GetUserRoles(_token.GetTokenCopy());
+                _userInfo = await _authorisationRepository.GetUserInfo(_token.GetTokenCopy());
             }
             else
             {
-                _userRoles = new List<string>();
+                _userInfo = null;
             }
         }
 
@@ -102,14 +103,14 @@ namespace WMC.Services
             if (_token != null)
             {
                 var serializedToken = JsonConvert.SerializeObject(_token.GetUnsafeCopy());
-                await SecureStorage.SetAsync("token", serializedToken);
-                var serializedRoles = JsonConvert.SerializeObject(_userRoles);
-                await SecureStorage.SetAsync("roles", serializedRoles);
+                await SecureStorage.SetAsync(Constants.StorageToken, serializedToken);
+                var serializedRoles = JsonConvert.SerializeObject(_userInfo);
+                await SecureStorage.SetAsync(Constants.StorageUserInfo, serializedRoles);
             }
             else
             {
-                SecureStorage.Remove("token");
-                SecureStorage.Remove("roles");
+                SecureStorage.Remove(Constants.StorageToken);
+                SecureStorage.Remove(Constants.StorageUserInfo);
             }
         }
     }
