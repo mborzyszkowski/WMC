@@ -9,6 +9,11 @@ namespace WMC.Services
     {
         private readonly IProductRepository<Product> _repository = new ProductRepository();
 
+        public void ClearCache()
+        {
+            _repository.ClearCache();
+        }
+
         public async Task<bool> AddProduct(Product product)
         {
             return await _repository.AddProduct(product);

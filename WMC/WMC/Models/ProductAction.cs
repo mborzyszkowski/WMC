@@ -10,10 +10,8 @@ namespace WMC.Models
         }
         
         public ActionType Action { get; set; }
-        // All existing on API, if empty then product created but not sync with api
-        public long? Id { get; set; }
-        // All products
-        public Guid Guid { get; set; } = Guid.NewGuid();
+        // All existing on API, if id is negative then it is new item
+        public long Id { get; set; }
         // On update/create
         public string ManufacturerName { get; set; }
         // On update/create
@@ -22,5 +20,40 @@ namespace WMC.Models
         public double Price { get; set; }
         // On quantity change
         public long QuantityChange { get; set; }
+
+        public static ProductAction AddProduct(Product product) =>
+            new ProductAction
+            {
+                Action = ActionType.Add,
+                Id = product.Id,
+                ManufacturerName = product.ManufacturerName,
+                ModelName = product.ModelName,
+                Price = product.Price,
+            };
+
+        public static ProductAction UpdateProduct(Product product) =>
+            new ProductAction
+            {
+                Action = ActionType.Update,
+                Id = product.Id,
+                ManufacturerName = product.ManufacturerName,
+                ModelName = product.ModelName,
+                Price = product.Price,
+            };
+
+        public static ProductAction DeleteProduct(long productId) =>
+            new ProductAction
+            {
+                Action = ActionType.Delete,
+                Id = productId,
+            };
+
+        public static ProductAction ChangeQuantityOfProduct(long productId, long quantityChange) =>
+            new ProductAction
+            {
+                Action = ActionType.ChangeQuantity,
+                Id = productId,
+                QuantityChange = quantityChange,
+            };
     }
 }

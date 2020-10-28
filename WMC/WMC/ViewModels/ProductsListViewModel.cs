@@ -64,8 +64,8 @@ namespace WMC.ViewModels
         private void OnLogout()
         {
             AuthenticationService.Logout();
+            Warehouse.ClearCache();
             Application.Current.MainPage = new LoginChooserPage();
-            GC.Collect();
         }
 
         async void OnAddProduct()

@@ -11,7 +11,7 @@ namespace WMC
 
         // Akavache storage
         public static string StorageProducts { get; } = "products";
-        public static string StorageOperations { get; } = "operations";
+        public static string StorageProductActions { get; } = "product_actions";
 
 
         // API
