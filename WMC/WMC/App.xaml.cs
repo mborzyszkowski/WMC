@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using Akavache;
 using Newtonsoft.Json;
 using WMC.Models;
 using WMC.Repositories;
@@ -6,6 +6,7 @@ using WMC.Services;
 using WMC.Views;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using System.Reactive.Linq;
 
 namespace WMC
 {
@@ -14,7 +15,8 @@ namespace WMC
         public App()
         {
             InitializeComponent();
-
+            BlobCache.ApplicationName = "WMC";
+            BlobCache.EnsureInitialized();
             DependencyService.Register<WarehouseProductsService>();
             DependencyService.Register<AuthorisationRepository>();
             DependencyService.Register<AuthenticationService>();

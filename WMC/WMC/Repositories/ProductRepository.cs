@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -8,37 +9,44 @@ using Newtonsoft.Json;
 using WMC.Models;
 using WMC.Services;
 using Xamarin.Forms;
+using System.Reactive.Linq;
+using Akavache;
+using Xamarin.Essentials;
+using System.Reactive.Linq;
 
 namespace WMC.Repositories
 {
     public class ProductRepository : IProductRepository<Product>
     {
-        private readonly HttpClient _httpClient;
-
         private readonly string _baseUrl = 
             (Device.RuntimePlatform == Device.Android ? Constants.ApiEndpointForAndroid : Constants.ApiEndpointForIos)
             + "/products";
+
+        private readonly HttpClient _httpClient;
+        private readonly IBlobCache _cache;
+        private List<Product> _products;
 
         public ProductRepository()
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-        }
+            _cache = BlobCache.LocalMachine;
 
-        private async Task SetupToken()
-        {
-            var authenticationService = DependencyService.Get<IAuthenticationService>();
+            var productsCache = GetFromCache<List<Product>>(Constants.StorageProducts);
+            _products = productsCache ?? new List<Product>();
 
-            var token = await authenticationService.GetToken();
-
-            _httpClient.DefaultRequestHeaders.Authorization = 
-                new AuthenticationHeaderValue("Bearer", token.Token);
+            //TODO: add cache for actions
         }
 
         public async Task<IEnumerable<Product>> GetProductsList()
         {
+            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+            {
+                return _products;
+            }
+
             await SetupToken();
-            
+
             var url = new Uri($"{_baseUrl}");
 
             var response = await _httpClient.GetAsync(url);
@@ -46,7 +54,14 @@ namespace WMC.Repositories
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<IEnumerable<Product>>(content);
+                var products = JsonConvert.DeserializeObject<List<Product>>(content);
+
+                if (products != null)
+                {
+                    await _cache.InsertObject(Constants.StorageProducts, products);
+                    _products = new List<Product>(products);
+                    return products;
+                }
             }
 
             return new List<Product>();
@@ -54,6 +69,12 @@ namespace WMC.Repositories
 
         public async Task<Product> GetProduct(long productId)
         {
+            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+            { 
+                //TODO: change to get by guid
+                return _products.First(p => p.Id == productId);
+            }
+
             await SetupToken();
 
             var url = new Uri($"{_baseUrl}/{productId}");
@@ -117,6 +138,29 @@ namespace WMC.Repositories
             var response = await _httpClient.PutAsync(url, null);
 
             return response.IsSuccessStatusCode;
+        }
+
+        private async Task SetupToken()
+        {
+            var authenticationService = DependencyService.Get<IAuthenticationService>();
+
+            var token = await authenticationService.GetToken();
+
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token.Token);
+        }
+
+        private TItem GetFromCache<TItem>(string cacheName)
+        {
+            try
+            {
+                var item = _cache.GetObject<TItem>(cacheName);
+                return item.Wait();
+            }
+            catch (KeyNotFoundException)
+            {
+                return default;
+            }
         }
     }
 }
