@@ -5,6 +5,7 @@ namespace WMC.Services
 {
     public interface IWarehouseProductsService<T>
     {
+        void ClearCache();
         Task<bool> AddProduct(T product);
         Task<bool> RemoveProduct(long productId);
         Task<bool> UpdateProduct(T updateProduct);

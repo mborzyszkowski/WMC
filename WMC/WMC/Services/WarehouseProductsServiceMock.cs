@@ -21,6 +21,9 @@ namespace WMC.Services
                 new Product { Id = 6, ManufacturerName = "Huawei", ModelName = "P9", Price = 1500, Quantity = 4},
             };
         }
+        public void ClearCache()
+        {
+        }
 
         public async Task<bool> AddProduct(Product product)
         {
@@ -63,14 +66,14 @@ namespace WMC.Services
             return await Task.FromResult(true);
         }
 
-        public async Task<bool> ChangeProductQuantity(long productId, long count)
+        public async Task<bool> ChangeProductQuantity(long productId, long quantityChange)
         {
             var product = _products.FirstOrDefault(p => p.Id == productId);
 
             if (product == null) 
                 return await Task.FromResult(false);
             
-            product.Quantity += count;
+            product.Quantity += quantityChange;
             return await Task.FromResult(true);
         }
     }

@@ -25,6 +25,8 @@ namespace WMC.Repositories
         private readonly HttpClient _httpClient;
         private readonly IBlobCache _cache;
         private List<Product> _products;
+        private List<ProductAction> _productActions;
+        private List<string> _syncResult = new List<string>();
 
         public ProductRepository()
         {
@@ -35,7 +37,19 @@ namespace WMC.Repositories
             var productsCache = GetFromCache<List<Product>>(Constants.StorageProducts);
             _products = productsCache ?? new List<Product>();
 
-            //TODO: add cache for actions
+            var productActionCache = GetFromCache<List<ProductAction>>(Constants.StorageProductActions);
+            _productActions = productActionCache ?? new List<ProductAction>();
+        }
+
+        public void ClearCache()
+        {
+            _products = new List<Product>();
+            var productsClear = _cache.InvalidateObject<List<Product>>(Constants.StorageProducts);
+            productsClear.Wait();
+            
+            _productActions = new List<ProductAction>();
+            var productsActionsClear = _cache.InvalidateObject<List<ProductAction>>(Constants.StorageProductActions);
+            productsActionsClear.Wait();
         }
 
         public async Task<IEnumerable<Product>> GetProductsList()
@@ -46,6 +60,13 @@ namespace WMC.Repositories
             }
 
             await SetupToken();
+
+            if (_productActions.Count > 0)
+            {
+                // TODO: call sync actions
+                // _productActions.Clear();
+                // force redirect to product sync info
+            }
 
             var url = new Uri($"{_baseUrl}");
 
@@ -58,7 +79,7 @@ namespace WMC.Repositories
 
                 if (products != null)
                 {
-                    await _cache.InsertObject(Constants.StorageProducts, products);
+                    await SaveProductsInCache(products);
                     _products = new List<Product>(products);
                     return products;
                 }
@@ -71,11 +92,17 @@ namespace WMC.Repositories
         {
             if (Connectivity.NetworkAccess != NetworkAccess.Internet)
             { 
-                //TODO: change to get by guid
                 return _products.First(p => p.Id == productId);
             }
 
             await SetupToken();
+
+            if (_productActions.Count > 0)
+            {
+                // TODO: call sync actions
+                // _productActions.Clear();
+                // force redirect to product sync info
+            }
 
             var url = new Uri($"{_baseUrl}/{productId}");
 
@@ -92,7 +119,29 @@ namespace WMC.Repositories
 
         public async Task<bool> AddProduct(Product product)
         {
+            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+            {
+                product.Id = GetNextIdForNewItem();
+                _products.Add(product);
+                await SaveProductsInCache(_products);
+
+                var productAddAction = ProductAction.AddProduct(product);
+                _productActions.Add(productAddAction);
+                await SaveProductsActionsInCache(_productActions);
+
+                return true;
+            }
+
             await SetupToken();
+
+            if (_productActions.Count > 0)
+            {
+                // TODO: perform last add action
+
+                // TODO: call sync actions
+                // _productActions.Clear();
+                // force redirect to product sync info
+            }
 
             var url = new Uri($"{_baseUrl}");
 
@@ -106,7 +155,37 @@ namespace WMC.Repositories
 
         public async Task<bool> UpdateProduct(Product updateProduct)
         {
+            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+            {
+                var product = _products.First(p => p.Id == updateProduct.Id);
+
+                if (product == null)
+                {
+                    return false;
+                }
+
+                product.ManufacturerName = updateProduct.ManufacturerName;
+                product.ModelName = updateProduct.ModelName;
+                product.Price = updateProduct.Price;
+                await SaveProductsInCache(_products);
+
+                var productUpdateAction = ProductAction.UpdateProduct(product);
+                _productActions.Add(productUpdateAction);
+                await SaveProductsActionsInCache(_productActions);
+
+                return true;
+            }
+
             await SetupToken();
+
+            if (_productActions.Count > 0)
+            {
+                // TODO: perform last add action
+
+                // TODO: call sync actions
+                // _productActions.Clear();
+                // force redirect to product sync info
+            }
 
             var url = new Uri($"{_baseUrl}/{updateProduct.Id}");
 
@@ -120,7 +199,35 @@ namespace WMC.Repositories
 
         public async Task<bool> RemoveProduct(long productId)
         {
+            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+            {
+                var product = _products.First(p => p.Id == productId);
+
+                if (product == null)
+                {
+                    return false;
+                }
+
+                _products.Remove(product);
+                await SaveProductsInCache(_products);
+
+                var productRemoveAction = ProductAction.DeleteProduct(productId);
+                _productActions.Add(productRemoveAction);
+                await SaveProductsActionsInCache(_productActions);
+
+                return true;
+            }
+
             await SetupToken();
+
+            if (_productActions.Count > 0)
+            {
+                // TODO: perform last add action
+
+                // TODO: call sync actions
+                // _productActions.Clear();
+                // force redirect to product sync info
+            }
 
             var url = new Uri($"{_baseUrl}/{productId}");
 
@@ -129,16 +236,48 @@ namespace WMC.Repositories
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> ChangeProductQuantity(long productId, long count)
+        public async Task<bool> ChangeProductQuantity(long productId, long quantityChange)
         {
+            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+            {
+                var product = _products.First(p => p.Id == productId);
+
+                if (product == null)
+                {
+                    return false;
+                }
+
+                product.Quantity += quantityChange;
+                await SaveProductsInCache(_products);
+
+                var changeQuantityOfProductAction = ProductAction.ChangeQuantityOfProduct(productId, quantityChange);
+                _productActions.Add(changeQuantityOfProductAction);
+                await SaveProductsActionsInCache(_productActions);
+
+                return true;
+            }
+
             await SetupToken();
 
-            var url = new Uri($"{_baseUrl}/{productId}/{count}");
+            if (_productActions.Count > 0)
+            {
+                // TODO: perform last add action
+
+                // TODO: call sync actions
+                // _productActions.Clear();
+                // force redirect to product sync info
+            }
+
+            var url = new Uri($"{_baseUrl}/{productId}/{quantityChange}");
 
             var response = await _httpClient.PutAsync(url, null);
 
             return response.IsSuccessStatusCode;
         }
+
+        /*
+         * PRIVATE METHODS
+         */
 
         private async Task SetupToken()
         {
@@ -161,6 +300,27 @@ namespace WMC.Repositories
             {
                 return default;
             }
+        }
+
+        private long GetNextIdForNewItem()
+        {
+            if (_products.Count == 0)
+            {
+                return -1;
+            }
+
+            var minProductId = _products.Select(p => p.Id).Min();
+            return minProductId > 0 ? -1 : minProductId - 1;
+        }
+
+        private async Task SaveProductsInCache(List<Product> products)
+        {
+            await _cache.InsertObject(Constants.StorageProducts, products);
+        }
+
+        private async Task SaveProductsActionsInCache(List<ProductAction> productActions)
+        {
+            await _cache.InsertObject(Constants.StorageProductActions, productActions);
         }
     }
 }
