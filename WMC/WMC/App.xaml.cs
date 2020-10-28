@@ -24,7 +24,7 @@ namespace WMC
 
         protected override void OnStart()
         {
-            var tokenContentTask = SecureStorage.GetAsync("token");
+            var tokenContentTask = SecureStorage.GetAsync(Constants.StorageToken);
             tokenContentTask.Wait();
             
             var tokenContent = tokenContentTask.Result;
@@ -34,15 +34,14 @@ namespace WMC
                 var tokenUnsafe = JsonConvert.DeserializeObject<WmcTokenUnsafe>(tokenContent);
                 var token = WmcToken.CreateToken(tokenUnsafe.Token, tokenUnsafe.RefreshToken, tokenUnsafe.ExpirationDate);
 
-                var rolesTask = SecureStorage.GetAsync("roles");
-                rolesTask.Wait();
+                var userInfoTask = SecureStorage.GetAsync(Constants.StorageUserInfo);
+                userInfoTask.Wait();
 
-                var rolesContent = rolesTask.Result;
+                var userInfoContent = userInfoTask.Result;
 
-                var roles = string.IsNullOrWhiteSpace(rolesContent) 
-                    ? new List<string>() : JsonConvert.DeserializeObject<List<string>>(rolesContent);
+                var userInfo = string.IsNullOrWhiteSpace(userInfoContent) ? null : JsonConvert.DeserializeObject<UserInfo>(userInfoContent);
 
-                DependencyService.Get<IAuthenticationService>().SetupToken(token, roles);
+                DependencyService.Get<IAuthenticationService>().SetupAuthenticationData(token, userInfo);
                 MainPage = new AppShell();
             }
         }

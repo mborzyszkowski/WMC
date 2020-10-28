@@ -27,6 +27,8 @@ namespace WMC.ViewModels
             set => SetProperty(ref _title, value);
         }
 
+        public string UserName => AuthenticationService.GetUserName();
+
         protected bool SetProperty<T>(ref T backingStore, T value,
             [CallerMemberName] string propertyName = "",
             Action onChanged = null)

@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="WMC.Views.ProductListPage"
-			 Title="{Binding Title}"
+			 Title="{Binding UserName}"
 			 xmlns:local="clr-namespace:WMC.ViewModels"
 			 xmlns:model="clr-namespace:WMC.Models"
              x:DataType="local:ProductsListViewModel"

@@ -65,12 +65,12 @@ namespace WMC.Repositories
             return null;
         }
 
-        public async Task<IEnumerable<string>> GetUserRoles(WmcToken token)
+        public async Task<UserInfo> GetUserInfo(WmcToken token)
         {
             _httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token.Token);
 
-            var url = new Uri($"{_baseUrl}/role");
+            var url = new Uri($"{_baseUrl}/userInfo");
 
             var response = await _httpClient.GetAsync(url);
 
@@ -79,10 +79,10 @@ namespace WMC.Repositories
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<List<string>>(content);
+                return JsonConvert.DeserializeObject<UserInfo>(content);
             }
 
-            return new List<string>();
+            return null;
         }
 
         public async Task<WmcToken> RefreshToken(WmcToken previousToken)
