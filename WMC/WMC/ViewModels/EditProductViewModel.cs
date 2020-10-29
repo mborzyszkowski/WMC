@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using WMC.Models;
+using WMC.Views;
 using Xamarin.Forms;
 
 namespace WMC.ViewModels
@@ -62,11 +63,15 @@ namespace WMC.ViewModels
         {
             try
             {
-                Product product = await Warehouse.GetProduct(productId);
+                var product = await Warehouse.GetProduct(productId);
                 ManufacturerName = product.ManufacturerName;
                 ModelName = product.ModelName;
                 Price = product.Price;
                 OnPropertyChanged("Product");
+            }
+            catch (SyncRedirectException)
+            {
+                Application.Current.MainPage = new SyncProductsResultPage();
             }
             catch (Exception)
             {
@@ -89,9 +94,15 @@ namespace WMC.ViewModels
                 Price = _price,
             };
 
-            await Warehouse.UpdateProduct(newProduct);
-
-            await Shell.Current.GoToAsync($"..");
+            try
+            {
+                await Warehouse.UpdateProduct(newProduct);
+                await Shell.Current.GoToAsync($"..");
+            }
+            catch (SyncRedirectException)
+            {
+                Application.Current.MainPage = new SyncProductsResultPage();
+            }
         }
     }
 }

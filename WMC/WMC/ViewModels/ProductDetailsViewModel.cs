@@ -7,7 +7,7 @@ using Xamarin.Forms;
 namespace WMC.ViewModels
 {
     [QueryProperty(nameof(ProductId), nameof(ProductId))]
-    class ProductDetailsViewModel : BaseViewModel
+    public class ProductDetailsViewModel : BaseViewModel
     {
         public Product Product { get; private set; }
         private long _productId;
@@ -44,8 +44,15 @@ namespace WMC.ViewModels
 
             if (deletionConfirmed)
             {
-                await Warehouse.RemoveProduct(_productId);
-                await Shell.Current.GoToAsync($"..");
+                try
+                {
+                    await Warehouse.RemoveProduct(_productId);
+                    await Shell.Current.GoToAsync($"..");
+                }
+                catch (SyncRedirectException)
+                {
+                    Application.Current.MainPage = new SyncProductsResultPage();
+                }
             }
         }
 
@@ -102,6 +109,10 @@ namespace WMC.ViewModels
             {
                 Product = await Warehouse.GetProduct(productId);
                 OnPropertyChanged("Product");
+            }
+            catch (SyncRedirectException)
+            {
+                Application.Current.MainPage = new SyncProductsResultPage();
             }
             catch (Exception)
             {

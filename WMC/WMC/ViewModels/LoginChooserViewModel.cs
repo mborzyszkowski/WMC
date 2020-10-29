@@ -4,7 +4,7 @@ using Xamarin.Forms;
 
 namespace WMC.ViewModels
 {
-    class LoginChooserViewModel : BaseViewModel
+    public class LoginChooserViewModel : BaseViewModel
     {
         public LoginChooserViewModel()
         {

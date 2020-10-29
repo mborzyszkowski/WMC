@@ -3,7 +3,7 @@ using Xamarin.Forms;
 
 namespace WMC.ViewModels
 {
-    class FacebookLoginViewModel : BaseViewModel
+    public class FacebookLoginViewModel : BaseViewModel
     {
         private readonly WebView _webView;
 

@@ -1,9 +1,10 @@
 ﻿using WMC.Models;
+using WMC.Views;
 using Xamarin.Forms;
 
 namespace WMC.ViewModels
 {
-    class NewProductViewModel : BaseViewModel
+    public class NewProductViewModel : BaseViewModel
     {
         private string _manufacturerName;
         private string _modelName;
@@ -60,9 +61,15 @@ namespace WMC.ViewModels
                 Quantity = 0,
             };
 
-            await Warehouse.AddProduct(newProduct);
-
-            await Shell.Current.GoToAsync("..");
+            try
+            {
+                await Warehouse.AddProduct(newProduct);
+                await Shell.Current.GoToAsync("..");
+            }
+            catch (SyncRedirectException)
+            {
+                Application.Current.MainPage = new SyncProductsResultPage();
+            }
         }
     }
 }

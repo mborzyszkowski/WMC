@@ -26,7 +26,7 @@ namespace WMC.Repositories
         private readonly IBlobCache _cache;
         private List<Product> _products;
         private List<ProductAction> _productActions;
-        private List<string> _syncResult = new List<string>();
+        private List<string> _syncResultErrors = new List<string>();
 
         public ProductRepository()
         {
@@ -41,12 +41,19 @@ namespace WMC.Repositories
             _productActions = productActionCache ?? new List<ProductAction>();
         }
 
-        public void ClearCache()
+        public List<string> GetSyncResultErrors() => new List<string>(_syncResultErrors);
+
+        public void ClearCache() => ClearCache(true);
+
+        public void ClearCache(bool clearProductsCache)
         {
-            _products = new List<Product>();
-            var productsClear = _cache.InvalidateObject<List<Product>>(Constants.StorageProducts);
-            productsClear.Wait();
-            
+            if (clearProductsCache)
+            {
+                _products = new List<Product>();
+                var productsClear = _cache.InvalidateObject<List<Product>>(Constants.StorageProducts);
+                productsClear.Wait();
+            }
+
             _productActions = new List<ProductAction>();
             var productsActionsClear = _cache.InvalidateObject<List<ProductAction>>(Constants.StorageProductActions);
             productsActionsClear.Wait();
@@ -59,14 +66,18 @@ namespace WMC.Repositories
                 return _products;
             }
 
-            await SetupToken();
-
-            if (_productActions.Count > 0)
+            if (_productActions.Count == 0)
             {
-                // TODO: call sync actions
-                // _productActions.Clear();
-                // force redirect to product sync info
+                return await GetProductsListUsingApi();
             }
+
+            await SyncProducts();
+            throw new SyncRedirectException("Products have been synchronized");
+        }
+
+        public async Task<IEnumerable<Product>> GetProductsListUsingApi()
+        {
+            await SetupToken();
 
             var url = new Uri($"{_baseUrl}");
 
@@ -95,14 +106,19 @@ namespace WMC.Repositories
                 return _products.First(p => p.Id == productId);
             }
 
-            await SetupToken();
-
-            if (_productActions.Count > 0)
+            if (_productActions.Count == 0)
             {
-                // TODO: call sync actions
-                // _productActions.Clear();
-                // force redirect to product sync info
+                return await GetProductUsingApi(productId);
             }
+
+            await SyncProducts();
+            throw new SyncRedirectException("Products have been synchronized");
+
+        }
+
+        public async Task<Product> GetProductUsingApi(long productId)
+        {
+            await SetupToken();
 
             var url = new Uri($"{_baseUrl}/{productId}");
 
@@ -121,27 +137,35 @@ namespace WMC.Repositories
         {
             if (Connectivity.NetworkAccess != NetworkAccess.Internet)
             {
-                product.Id = GetNextIdForNewItem();
-                _products.Add(product);
-                await SaveProductsInCache(_products);
-
-                var productAddAction = ProductAction.AddProduct(product);
-                _productActions.Add(productAddAction);
-                await SaveProductsActionsInCache(_productActions);
-
-                return true;
+                return await AddProductUsingCache(product);
             }
 
-            await SetupToken();
-
-            if (_productActions.Count > 0)
+            if (_productActions.Count == 0)
             {
-                // TODO: perform last add action
-
-                // TODO: call sync actions
-                // _productActions.Clear();
-                // force redirect to product sync info
+                return await AddProductUsingApi(product);
             }
+
+            await AddProductUsingCache(product);
+            await SyncProducts();
+            throw new SyncRedirectException("Products have been synchronized");
+        }
+
+        private async Task<bool> AddProductUsingCache(Product product)
+        {
+            product.Id = GetNextIdForNewItem();
+            _products.Add(product);
+            await SaveProductsInCache(_products);
+
+            var productAddAction = ProductAction.AddProduct(product);
+            _productActions.Add(productAddAction);
+            await SaveProductsActionsInCache(_productActions);
+
+            return true;
+        }
+
+        private async Task<bool> AddProductUsingApi(Product product)
+        {
+            await SetupToken();
 
             var url = new Uri($"{_baseUrl}");
 
@@ -157,35 +181,43 @@ namespace WMC.Repositories
         {
             if (Connectivity.NetworkAccess != NetworkAccess.Internet)
             {
-                var product = _products.First(p => p.Id == updateProduct.Id);
-
-                if (product == null)
-                {
-                    return false;
-                }
-
-                product.ManufacturerName = updateProduct.ManufacturerName;
-                product.ModelName = updateProduct.ModelName;
-                product.Price = updateProduct.Price;
-                await SaveProductsInCache(_products);
-
-                var productUpdateAction = ProductAction.UpdateProduct(product);
-                _productActions.Add(productUpdateAction);
-                await SaveProductsActionsInCache(_productActions);
-
-                return true;
+                return await UpdateProductUsingCache(updateProduct);
             }
 
-            await SetupToken();
-
-            if (_productActions.Count > 0)
+            if (_productActions.Count == 0)
             {
-                // TODO: perform last add action
-
-                // TODO: call sync actions
-                // _productActions.Clear();
-                // force redirect to product sync info
+                return await UpdateProductUsingApi(updateProduct);
             }
+
+            await UpdateProductUsingCache(updateProduct);
+            await SyncProducts();
+            throw new SyncRedirectException("Products have been synchronized");
+        }
+
+        public async Task<bool> UpdateProductUsingCache(Product updateProduct)
+        {
+            var product = _products.First(p => p.Id == updateProduct.Id);
+
+            if (product == null)
+            {
+                return false;
+            }
+
+            product.ManufacturerName = updateProduct.ManufacturerName;
+            product.ModelName = updateProduct.ModelName;
+            product.Price = updateProduct.Price;
+            await SaveProductsInCache(_products);
+
+            var productUpdateAction = ProductAction.UpdateProduct(product);
+            _productActions.Add(productUpdateAction);
+            await SaveProductsActionsInCache(_productActions);
+
+            return true;
+        }
+
+        public async Task<bool> UpdateProductUsingApi(Product updateProduct)
+        {
+            await SetupToken();
 
             var url = new Uri($"{_baseUrl}/{updateProduct.Id}");
 
@@ -201,33 +233,41 @@ namespace WMC.Repositories
         {
             if (Connectivity.NetworkAccess != NetworkAccess.Internet)
             {
-                var product = _products.First(p => p.Id == productId);
-
-                if (product == null)
-                {
-                    return false;
-                }
-
-                _products.Remove(product);
-                await SaveProductsInCache(_products);
-
-                var productRemoveAction = ProductAction.DeleteProduct(productId);
-                _productActions.Add(productRemoveAction);
-                await SaveProductsActionsInCache(_productActions);
-
-                return true;
+                return await RemoveProductUsingCache(productId);
             }
 
-            await SetupToken();
-
-            if (_productActions.Count > 0)
+            if (_productActions.Count <= 0)
             {
-                // TODO: perform last add action
-
-                // TODO: call sync actions
-                // _productActions.Clear();
-                // force redirect to product sync info
+                return await RemoveProductUsingApi(productId);
             }
+
+            await RemoveProductUsingCache(productId);
+            await SyncProducts();
+            throw new SyncRedirectException("Products have been synchronized");
+        }
+
+        public async Task<bool> RemoveProductUsingCache(long productId)
+        {
+            var product = _products.First(p => p.Id == productId);
+
+            if (product == null)
+            {
+                return false;
+            }
+
+            _products.Remove(product);
+            await SaveProductsInCache(_products);
+
+            var productRemoveAction = ProductAction.DeleteProduct(productId);
+            _productActions.Add(productRemoveAction);
+            await SaveProductsActionsInCache(_productActions);
+
+            return true;
+        }
+
+        public async Task<bool> RemoveProductUsingApi(long productId)
+        {
+            await SetupToken();
 
             var url = new Uri($"{_baseUrl}/{productId}");
 
@@ -240,39 +280,70 @@ namespace WMC.Repositories
         {
             if (Connectivity.NetworkAccess != NetworkAccess.Internet)
             {
-                var product = _products.First(p => p.Id == productId);
-
-                if (product == null)
-                {
-                    return false;
-                }
-
-                product.Quantity += quantityChange;
-                await SaveProductsInCache(_products);
-
-                var changeQuantityOfProductAction = ProductAction.ChangeQuantityOfProduct(productId, quantityChange);
-                _productActions.Add(changeQuantityOfProductAction);
-                await SaveProductsActionsInCache(_productActions);
-
-                return true;
+                return await ChangeProductQuantityUsingCache(productId, quantityChange);
             }
 
-            await SetupToken();
-
-            if (_productActions.Count > 0)
+            if (_productActions.Count <= 0)
             {
-                // TODO: perform last add action
-
-                // TODO: call sync actions
-                // _productActions.Clear();
-                // force redirect to product sync info
+                return await ChangeProductQuantityUsingApi(productId, quantityChange);
             }
+
+            await ChangeProductQuantityUsingCache(productId, quantityChange);
+            await SyncProducts();
+            throw new SyncRedirectException("Products have been synchronized");
+
+        }
+
+        public async Task<bool> ChangeProductQuantityUsingCache(long productId, long quantityChange)
+        {
+            var product = _products.First(p => p.Id == productId);
+
+            if (product == null)
+            {
+                return false;
+            }
+
+            product.Quantity += quantityChange;
+            await SaveProductsInCache(_products);
+
+            var changeQuantityOfProductAction = ProductAction.ChangeQuantityOfProduct(productId, quantityChange);
+            _productActions.Add(changeQuantityOfProductAction);
+            await SaveProductsActionsInCache(_productActions);
+
+            return true;
+        }
+
+        public async Task<bool> ChangeProductQuantityUsingApi(long productId, long quantityChange)
+        {
+            await SetupToken();
 
             var url = new Uri($"{_baseUrl}/{productId}/{quantityChange}");
 
             var response = await _httpClient.PutAsync(url, null);
 
             return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> SyncProducts()
+        {
+            await SetupToken();
+
+            var url = new Uri($"{_baseUrl}/syncProducts");
+
+            var jsonProduct = JsonConvert.SerializeObject(_productActions);
+            var content = new StringContent(jsonProduct, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(url, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var syncErrorsResponse = await response.Content.ReadAsStringAsync();
+                _syncResultErrors = JsonConvert.DeserializeObject<List<string>>(syncErrorsResponse);
+                ClearCache(false);
+                return true;
+            }
+
+            return false;
         }
 
         /*
