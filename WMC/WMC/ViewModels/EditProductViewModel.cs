@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using WMC.Exceptions;
 using WMC.Models;
 using WMC.Views;
 using Xamarin.Forms;
@@ -73,6 +74,11 @@ namespace WMC.ViewModels
             {
                 Application.Current.MainPage = new SyncProductsResultPage();
             }
+            catch (ProductNotFoundException)
+            {
+                await Application.Current.MainPage.DisplayAlert("Not found", "Selected product no longer exists", "Ok");
+                Application.Current.MainPage = new AppShell();
+            }
             catch (Exception)
             {
                 Debug.WriteLine("Failed to Load Item");
@@ -98,6 +104,11 @@ namespace WMC.ViewModels
             {
                 await Warehouse.UpdateProduct(newProduct);
                 await Shell.Current.GoToAsync($"..");
+            }
+            catch (ProductNotFoundException)
+            {
+                await Application.Current.MainPage.DisplayAlert("Not found", "Selected product no longer exists", "Ok");
+                Application.Current.MainPage = new AppShell();
             }
             catch (SyncRedirectException)
             {

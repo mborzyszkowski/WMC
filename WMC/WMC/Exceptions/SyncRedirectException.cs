@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WMC.Models
+namespace WMC.Exceptions
 {
     public class SyncRedirectException : Exception
     {

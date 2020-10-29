@@ -4,6 +4,7 @@
              x:Class="WMC.Views.SyncProductsResultPage"
              xmlns:local="clr-namespace:WMC.ViewModels"
              x:DataType="local:SyncProductsResultViewModel"
+             xmlns:model="clr-namespace:WMC.Models"
              BackgroundColor="White">
 	<ContentPage.Content>
 		<StackLayout>
@@ -12,12 +13,10 @@
 			        FontAttributes="Bold"
 			        Padding="20"
 			        Command="{Binding OkCommand}"/>
-			<ListView ItemsSource="{Binding SyncProductsResultList}" 
-			          IsVisible="True"
-			          HasUnevenRows="True">
-				<ListView.ItemTemplate>
-					<DataTemplate>
-						<ViewCell>
+			<RefreshView x:DataType="local:SyncProductsResultViewModel" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+				<CollectionView x:Name="ProductsErrorListView" ItemsSource="{Binding SyncProductsResultList}" SelectionMode="None">
+					<CollectionView.ItemTemplate>
+						<DataTemplate>
 							<StackLayout Orientation="Vertical">
 								<Grid BackgroundColor="White" 
 								      HeightRequest="10"/>
@@ -25,20 +24,21 @@
 								       Padding="0"
 								       BorderColor="Black">
 									<StackLayout Padding="10" 
-									             Orientation="Vertical"
-									             BackgroundColor="#E8E8E8">
+										             Orientation="Vertical"
+										             BackgroundColor="#E8E8E8"
+										             x:DataType="model:Error">
 										<StackLayout Orientation="Horizontal">
-											<Label Text="{Binding}"
-											       FontSize="15"
-											       TextColor="DarkRed"/>
+											<Label Text="{Binding Content}"
+												       FontSize="15"
+												       TextColor="DarkRed"/>
 										</StackLayout>
 									</StackLayout>
 								</Frame>
 							</StackLayout>
-						</ViewCell>
-					</DataTemplate>
-				</ListView.ItemTemplate>
-			</ListView>
+						</DataTemplate>
+					</CollectionView.ItemTemplate>
+				</CollectionView>
+			</RefreshView>
 		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>

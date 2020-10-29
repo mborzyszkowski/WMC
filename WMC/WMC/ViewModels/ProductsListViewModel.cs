@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using WMC.Exceptions;
 using WMC.Models;
 using WMC.Views;
 using Xamarin.Forms;
