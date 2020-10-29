@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -13,6 +14,7 @@ using System.Reactive.Linq;
 using Akavache;
 using Xamarin.Essentials;
 using System.Reactive.Linq;
+using WMC.Exceptions;
 
 namespace WMC.Repositories
 {
@@ -130,6 +132,11 @@ namespace WMC.Repositories
                 return JsonConvert.DeserializeObject<Product>(content);
             }
 
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                throw new ProductNotFoundException("Selected product no longer exists");
+            }
+
             return null;
         }
 
@@ -226,6 +233,11 @@ namespace WMC.Repositories
 
             var response = await _httpClient.PutAsync(url, content);
 
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                throw new ProductNotFoundException("Selected product no longer exists");
+            }
+
             return response.IsSuccessStatusCode;
         }
 
@@ -272,6 +284,11 @@ namespace WMC.Repositories
             var url = new Uri($"{_baseUrl}/{productId}");
 
             var response = await _httpClient.DeleteAsync(url);
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                throw new ProductNotFoundException("Selected product no longer exists");
+            }
 
             return response.IsSuccessStatusCode;
         }
@@ -320,6 +337,11 @@ namespace WMC.Repositories
             var url = new Uri($"{_baseUrl}/{productId}/{quantityChange}");
 
             var response = await _httpClient.PutAsync(url, null);
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                throw new ProductNotFoundException("Selected product no longer exists");
+            }
 
             return response.IsSuccessStatusCode;
         }

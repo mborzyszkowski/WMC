@@ -31,6 +31,8 @@ namespace WMC.Services
         {
             _token = null;
             _userInfo = null;
+            var refreshTask = RefreshStoredData();
+            refreshTask.Wait();
         }
 
         public async Task AuthenticateWithFacebook(string authenticationToken)

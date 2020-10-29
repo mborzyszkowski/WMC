@@ -1,4 +1,5 @@
-﻿using WMC.Models;
+﻿using WMC.Exceptions;
+using WMC.Models;
 using WMC.Views;
 using Xamarin.Forms;
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using WMC.Exceptions;
 using WMC.Models;
 using WMC.Views;
 using Xamarin.Forms;
@@ -49,6 +50,11 @@ namespace WMC.ViewModels
                     await Warehouse.RemoveProduct(_productId);
                     await Shell.Current.GoToAsync($"..");
                 }
+                catch (ProductNotFoundException)
+                {
+                    await Application.Current.MainPage.DisplayAlert("Not found", "Selected product no longer exists", "Ok");
+                    Application.Current.MainPage = new AppShell();
+                }
                 catch (SyncRedirectException)
                 {
                     Application.Current.MainPage = new SyncProductsResultPage();
@@ -58,14 +64,38 @@ namespace WMC.ViewModels
 
         async void OnIncreaseQuantity()
         {
-            await Warehouse.ChangeProductQuantity(_productId, _increaseQuantityNumber);
-            LoadProduct(_productId);
+            try
+            {
+                await Warehouse.ChangeProductQuantity(_productId, _increaseQuantityNumber);
+                LoadProduct(_productId);
+            }
+            catch (ProductNotFoundException)
+            {
+                await Application.Current.MainPage.DisplayAlert("Not found", "Selected product no longer exists", "Ok");
+                Application.Current.MainPage = new AppShell();
+            }
+            catch (SyncRedirectException)
+            {
+                Application.Current.MainPage = new SyncProductsResultPage();
+            }
         }
 
         async void OnDecreaseQuantity()
         {
-            await Warehouse.ChangeProductQuantity(_productId, - _decreaseQuantityNumber);
-            LoadProduct(_productId);
+            try
+            {
+                await Warehouse.ChangeProductQuantity(_productId, - _decreaseQuantityNumber);
+                LoadProduct(_productId);
+            }
+            catch (ProductNotFoundException)
+            {
+                await Application.Current.MainPage.DisplayAlert("Not found", "Selected product no longer exists", "Ok");
+                Application.Current.MainPage = new AppShell();
+            }
+            catch (SyncRedirectException)
+            {
+                Application.Current.MainPage = new SyncProductsResultPage();
+            }
         }
 
         public bool ValidateIncreaseQuantity()
@@ -113,6 +143,11 @@ namespace WMC.ViewModels
             catch (SyncRedirectException)
             {
                 Application.Current.MainPage = new SyncProductsResultPage();
+            }
+            catch (ProductNotFoundException)
+            {
+                await Application.Current.MainPage.DisplayAlert("Not found", "Selected product no longer exists", "Ok");
+                Application.Current.MainPage = new AppShell();
             }
             catch (Exception)
             {
