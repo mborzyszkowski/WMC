@@ -3,7 +3,7 @@ using Xamarin.Forms;
 
 namespace WMC.ViewModels
 {
-    class WmcLoginViewModel : BaseViewModel
+    public class WmcLoginViewModel : BaseViewModel
     {
         private string _name;
         private string _password;

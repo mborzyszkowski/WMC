@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WMC.Views.SyncProductsResultPage"
+             xmlns:local="clr-namespace:WMC.ViewModels"
+             x:DataType="local:SyncProductsResultViewModel"
+             BackgroundColor="White">
+	<ContentPage.Content>
+		<StackLayout>
+			<Button Text="Ok" 
+			        FontSize="Title"
+			        FontAttributes="Bold"
+			        Padding="20"
+			        Command="{Binding OkCommand}"/>
+			<ListView ItemsSource="{Binding SyncProductsResultList}" 
+			          IsVisible="True"
+			          HasUnevenRows="True">
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<ViewCell>
+							<StackLayout Orientation="Vertical">
+								<Grid BackgroundColor="White" 
+								      HeightRequest="10"/>
+								<Frame CornerRadius="15"  
+								       Padding="0"
+								       BorderColor="Black">
+									<StackLayout Padding="10" 
+									             Orientation="Vertical"
+									             BackgroundColor="#E8E8E8">
+										<StackLayout Orientation="Horizontal">
+											<Label Text="{Binding}"
+											       FontSize="15"
+											       TextColor="DarkRed"/>
+										</StackLayout>
+									</StackLayout>
+								</Frame>
+							</StackLayout>
+						</ViewCell>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+		</StackLayout>
+	</ContentPage.Content>
+</ContentPage>

@@ -9,24 +9,19 @@ namespace WMC.Services
     {
         private readonly IProductRepository<Product> _repository = new ProductRepository();
 
+        public List<string> GetSyncResultErrors()
+        {
+            return _repository.GetSyncResultErrors();
+        }
+
         public void ClearCache()
         {
             _repository.ClearCache();
         }
 
-        public async Task<bool> AddProduct(Product product)
+        public async Task<IEnumerable<Product>> GetProductsList()
         {
-            return await _repository.AddProduct(product);
-        }
-
-        public async Task<bool> RemoveProduct(long productId)
-        {
-            return await _repository.RemoveProduct(productId);
-        }
-
-        public async Task<bool> UpdateProduct(Product updateProduct)
-        {
-            return await _repository.UpdateProduct(updateProduct);
+            return await _repository.GetProductsList();
         }
 
         public async Task<Product> GetProduct(long productId)
@@ -34,9 +29,19 @@ namespace WMC.Services
             return await _repository.GetProduct(productId);
         }
 
-        public async Task<IEnumerable<Product>> GetProductsList()
+        public async Task<bool> AddProduct(Product product)
         {
-            return await _repository.GetProductsList();
+            return await _repository.AddProduct(product);
+        }
+
+        public async Task<bool> UpdateProduct(Product updateProduct)
+        {
+            return await _repository.UpdateProduct(updateProduct);
+        }
+
+        public async Task<bool> RemoveProduct(long productId)
+        {
+            return await _repository.RemoveProduct(productId);
         }
 
         public async Task<bool> ChangeProductQuantity(long productId, long count)

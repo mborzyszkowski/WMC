@@ -8,7 +8,7 @@ using Xamarin.Forms;
 
 namespace WMC.ViewModels
 {
-    class BaseViewModel : INotifyPropertyChanged
+    public class BaseViewModel : INotifyPropertyChanged
     {
         public IWarehouseProductsService<Product> Warehouse => DependencyService.Get<IWarehouseProductsService<Product>>();
         public IAuthenticationService AuthenticationService => DependencyService.Get<IAuthenticationService>();

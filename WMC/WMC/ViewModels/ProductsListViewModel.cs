@@ -9,7 +9,7 @@ using Xamarin.Forms.Internals;
 
 namespace WMC.ViewModels
 {
-    class ProductsListViewModel : BaseViewModel
+    public class ProductsListViewModel : BaseViewModel
     {
         public ObservableCollection<Product> Products { get; }
 
@@ -51,7 +51,11 @@ namespace WMC.ViewModels
                 var products = await Warehouse.GetProductsList();
                 products.ForEach(p => Products.Add(p));
             }
-            catch(Exception ex)
+            catch (SyncRedirectException)
+            {
+                Application.Current.MainPage = new SyncProductsResultPage();
+            }
+            catch (Exception ex)
             {
                 Debug.WriteLine(ex);
             }

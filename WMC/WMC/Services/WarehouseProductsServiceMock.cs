@@ -21,8 +21,21 @@ namespace WMC.Services
                 new Product { Id = 6, ManufacturerName = "Huawei", ModelName = "P9", Price = 1500, Quantity = 4},
             };
         }
+
+        public List<string> GetSyncResultErrors() => new List<string>();
+
         public void ClearCache()
         {
+        }
+
+        public async Task<IEnumerable<Product>> GetProductsList()
+        {
+            return await Task.FromResult(_products);
+        }
+
+        public async Task<Product> GetProduct(long productId)
+        {
+            return await Task.FromResult(_products.FirstOrDefault(p => p.Id == productId));
         }
 
         public async Task<bool> AddProduct(Product product)
@@ -32,14 +45,17 @@ namespace WMC.Services
             return await Task.FromResult(true);
         }
 
-        public async Task<Product> GetProduct(long productId)
+        public async Task<bool> UpdateProduct(Product updateProduct)
         {
-            return await Task.FromResult(_products.FirstOrDefault(p => p.Id == productId));
-        }
+            var product = _products.FirstOrDefault(p => p.Id == updateProduct.Id);
 
-        public async Task<IEnumerable<Product>> GetProductsList()
-        {
-            return await Task.FromResult(_products);
+            if (product == null)
+                return await Task.FromResult(false);
+
+            product.ManufacturerName = updateProduct.ManufacturerName;
+            product.ModelName = updateProduct.ModelName;
+            product.Price = updateProduct.Price;
+            return await Task.FromResult(true);
         }
 
         public async Task<bool> RemoveProduct(long productId)
@@ -50,19 +66,6 @@ namespace WMC.Services
                 return await Task.FromResult(false);
             
             _products.Remove(product);
-            return await Task.FromResult(true);
-        }
-
-        public async Task<bool> UpdateProduct(Product updateProduct)
-        {
-            var product = _products.FirstOrDefault(p => p.Id == updateProduct.Id);
-
-            if (product == null) 
-                return await Task.FromResult(false);
-            
-            product.ManufacturerName = updateProduct.ManufacturerName;
-            product.ModelName = updateProduct.ModelName;
-            product.Price = updateProduct.Price;
             return await Task.FromResult(true);
         }
 
