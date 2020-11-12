@@ -100,12 +100,12 @@ namespace WMC.ViewModels
 
         public bool ValidateIncreaseQuantity()
         {
-            return IncreaseQuantityNumber > 0;
+            return IncreaseQuantityNumber > 0 && (IsPlCurrency || IsUsCurrency && Product.PriceUsd.HasValue);
         }
 
         public bool ValidateDecreaseQuantity()
         {
-            return DecreaseQuantityNumber > 0 && Product.Quantity >= _decreaseQuantityNumber;
+            return DecreaseQuantityNumber > 0 && Product.Quantity >= _decreaseQuantityNumber && (IsPlCurrency || IsUsCurrency && Product.PriceUsd.HasValue);
         }
 
         public long IncreaseQuantityNumber

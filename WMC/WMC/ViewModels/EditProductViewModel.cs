@@ -14,6 +14,7 @@ namespace WMC.ViewModels
         private string _manufacturerName;
         private string _modelName;
         private double _price;
+        private double _priceUsd;
 
         public EditProductViewModel()
         {
@@ -60,6 +61,12 @@ namespace WMC.ViewModels
             set => SetProperty(ref _price, value);
         }
 
+        public double PriceUsd
+        {
+            get => _priceUsd;
+            set => SetProperty(ref _priceUsd, value);
+        }
+
         private async void LoadProduct(long productId)
         {
             try
@@ -68,6 +75,7 @@ namespace WMC.ViewModels
                 ManufacturerName = product.ManufacturerName;
                 ModelName = product.ModelName;
                 Price = product.Price;
+                PriceUsd = product.PriceUsd ?? 0.0;
                 OnPropertyChanged("Product");
             }
             catch (SyncRedirectException)
@@ -98,6 +106,7 @@ namespace WMC.ViewModels
                 ManufacturerName = _manufacturerName,
                 ModelName = _modelName,
                 Price = _price,
+                PriceUsd = _priceUsd,
             };
 
             try

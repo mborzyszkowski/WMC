@@ -31,18 +31,33 @@ namespace WMC.ViewModels
             Title = "Warehouse products";
             Products = new ObservableCollection<Product>();
 
+            SetPlCurrency = new Command(OnSetCurrencyPl);
+            SetUsCurrency = new Command(OnSetCurrencyUs);
             LoadProductsCommand = new Command(async () => await OnLoadProduct());
             LogoutCommand = new Command(OnLogout);
             AddProductCommand = new Command(OnAddProduct);
             ProductTapped = new Command<Product>(OnProductTapped);
         }
-
+        public Command SetPlCurrency { get; }
+        public Command SetUsCurrency { get; }
         public Command LoadProductsCommand { get; }
         public Command LogoutCommand { get; }
         public Command AddProductCommand { get; }
         public Command<Product> ProductTapped { get; }
 
-        async Task OnLoadProduct()
+        private void OnSetCurrencyPl()
+        {
+            AuthenticationService.SetCurrency(Currency.CurrencyType.PLN);
+            Application.Current.MainPage = new AppShell();
+        }
+
+        private void OnSetCurrencyUs()
+        {
+            AuthenticationService.SetCurrency(Currency.CurrencyType.USD);
+            Application.Current.MainPage = new AppShell();
+        }
+
+        private async Task OnLoadProduct()
         {
             IsBusy = true;
 

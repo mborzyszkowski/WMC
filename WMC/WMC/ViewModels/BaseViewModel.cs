@@ -29,6 +29,12 @@ namespace WMC.ViewModels
 
         public string UserName => AuthenticationService.GetUserName();
 
+        public string CurrencyStr => AuthenticationService.IsPlCurrency() ? "PLN" : "USD";
+
+        public bool IsPlCurrency => AuthenticationService.IsPlCurrency();
+
+        public bool IsUsCurrency => AuthenticationService.IsUsCurrency();
+
         protected bool SetProperty<T>(ref T backingStore, T value,
             [CallerMemberName] string propertyName = "",
             Action onChanged = null)

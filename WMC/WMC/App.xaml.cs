@@ -41,9 +41,21 @@ namespace WMC
 
                 var userInfoContent = userInfoTask.Result;
 
-                var userInfo = string.IsNullOrWhiteSpace(userInfoContent) ? null : JsonConvert.DeserializeObject<UserInfo>(userInfoContent);
+                var userInfo = string.IsNullOrWhiteSpace(userInfoContent) 
+                    ? null 
+                    : JsonConvert.DeserializeObject<UserInfo>(userInfoContent);
+
+                var currencyTask = SecureStorage.GetAsync(Constants.StorageCurrency);
+                currencyTask.Wait();
+
+                var currencyContent = currencyTask.Result;
+
+                var currency = string.IsNullOrWhiteSpace(currencyContent)
+                    ? new Currency {Type = Currency.CurrencyType.PLN}
+                    : JsonConvert.DeserializeObject<Currency>(currencyContent);
 
                 DependencyService.Get<IAuthenticationService>().SetupAuthenticationData(token, userInfo);
+                DependencyService.Get<IAuthenticationService>().SetCurrency(currency.Type);
                 MainPage = new AppShell();
             }
         }

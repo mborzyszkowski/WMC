@@ -55,6 +55,7 @@ namespace WMC.Services
             product.ManufacturerName = updateProduct.ManufacturerName;
             product.ModelName = updateProduct.ModelName;
             product.Price = updateProduct.Price;
+            product.PriceUsd = product.PriceUsd;
             return await Task.FromResult(true);
         }
 

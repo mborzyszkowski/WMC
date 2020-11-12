@@ -10,6 +10,7 @@ namespace WMC.ViewModels
         private string _manufacturerName;
         private string _modelName;
         private double _price;
+        private double _priceUsd;
 
         public NewProductViewModel()
         {
@@ -26,7 +27,8 @@ namespace WMC.ViewModels
         {
             return !string.IsNullOrWhiteSpace(_manufacturerName)
                    && !string.IsNullOrWhiteSpace(_modelName)
-                   && _price > 0;
+                   && _price > 0
+                   && _priceUsd > 0;
         }
 
         public string ManufacturerName
@@ -47,6 +49,12 @@ namespace WMC.ViewModels
             set => SetProperty(ref _price, value);
         }
 
+        public double PriceUsd
+        {
+            get => _priceUsd;
+            set => SetProperty(ref _priceUsd, value);
+        }
+
         private async void OnCancel()
         {
             await Shell.Current.GoToAsync("..");
@@ -59,6 +67,7 @@ namespace WMC.ViewModels
                 ManufacturerName = _manufacturerName,
                 ModelName = _modelName,
                 Price = _price,
+                PriceUsd = _priceUsd,
                 Quantity = 0,
             };
 

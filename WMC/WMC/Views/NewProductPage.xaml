@@ -12,8 +12,10 @@
 			<Entry Text="{Binding ManufacturerName, Mode=TwoWay}" FontSize="Medium" />
 			<Label Text="Model name" FontSize="Medium" />
 			<Entry Text="{Binding ModelName, Mode=TwoWay}" FontSize="Medium" />
-			<Label Text="Price" FontSize="Medium" />
-			<Entry Text="{Binding Price, Mode=TwoWay}" FontSize="Medium" Keyboard="Numeric" />
+			<Label Text="Price PLN" FontSize="Medium" />
+			<Entry Text="{Binding Price, Mode=TwoWay}" FontSize="Medium" Keyboard="Numeric"/>
+			<Label Text="Price USD" FontSize="Medium" />
+			<Entry Text="{Binding PriceUsd, Mode=TwoWay}" FontSize="Medium" Keyboard="Numeric"/>
 
 			<StackLayout Orientation="Horizontal">
 				<Button Text="Cancel" Command="{Binding CancelCommand}" HorizontalOptions="FillAndExpand"/>

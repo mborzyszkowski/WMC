@@ -18,8 +18,10 @@
 			<Entry Text="{Binding Product.ManufacturerName}" FontSize="Medium" IsReadOnly="True"/>
 			<Label Text="Model name" FontSize="Medium" />
 			<Entry Text="{Binding Product.ModelName}" FontSize="Medium" IsReadOnly="True"/>
-			<Label Text="Price" FontSize="Medium" />
+			<Label Text="Price PLN" FontSize="Medium" />
 			<Entry Text="{Binding Product.Price}" FontSize="Medium" IsReadOnly="True"/>
+			<Label Text="Price USD" FontSize="Medium" />
+			<Entry Text="{Binding Product.PriceUsd}" FontSize="Medium" IsReadOnly="True" />
 			<Label Text="Quantity" FontSize="Medium" />
 			<Entry Text="{Binding Product.Quantity}" FontSize="Medium" IsReadOnly="True"/>
 
@@ -33,6 +35,9 @@
 				<Button Text="-" Command="{Binding DecreaseQuantityCommand}" 
 				        FontAttributes="Bold" FontSize="Large" WidthRequest="4" HorizontalOptions="FillAndExpand"/>
 			</StackLayout>
+
+			<Label Text="The product must have a price in USD to change its quantity!" FontSize="Medium" TextColor="DarkGoldenrod" 
+			       HorizontalTextAlignment="Center" IsVisible="{Binding IsUsCurrency}"/>
 		</StackLayout>
     </ContentPage.Content>
 </ContentPage>

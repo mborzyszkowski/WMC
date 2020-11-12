@@ -9,8 +9,10 @@
              BackgroundColor="White">
 
 	<ContentPage.ToolbarItems>
+		<ToolbarItem Text="PL" Command="{Binding SetPlCurrency}"/>
+		<ToolbarItem Text="US" Command="{Binding SetUsCurrency}"/>
 		<ToolbarItem Text="Logout" Command="{Binding LogoutCommand}"/>
-		<ToolbarItem Text="Add" Command="{Binding AddProductCommand}" />
+		<ToolbarItem Text="Add" Command="{Binding AddProductCommand}"/>
 	</ContentPage.ToolbarItems>
 
 	<RefreshView x:DataType="local:ProductsListViewModel" Command="{Binding LoadProductsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
@@ -41,8 +43,13 @@
 									       FontSize="16"/>
 									<Label Text="{Binding Price}"
 										   LineBreakMode="NoWrap"
-										   FontSize="16"/>
-									<Label Text="PLN"
+										   FontSize="16"
+										   IsVisible="{Binding Source={RelativeSource AncestorType={x:Type local:ProductsListViewModel}}, Path=IsPlCurrency}"/>
+									<Label Text="{Binding PriceUsdString}"
+									       LineBreakMode="NoWrap"
+									       FontSize="16"
+									       IsVisible="{Binding Source={RelativeSource AncestorType={x:Type local:ProductsListViewModel}}, Path=IsUsCurrency}"/>
+									<Label Text="{Binding Source={RelativeSource AncestorType={x:Type local:ProductsListViewModel}}, Path=CurrencyStr}"
 									       LineBreakMode="NoWrap"
 									       FontSize="16"/>
 								</StackLayout>

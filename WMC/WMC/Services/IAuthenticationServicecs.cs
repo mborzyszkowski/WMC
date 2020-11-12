@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using WMC.Models;
 
 namespace WMC.Services
@@ -9,6 +8,9 @@ namespace WMC.Services
         bool IsManager();
         bool IsEmployee();
         string GetUserName();
+        bool IsPlCurrency();
+        bool IsUsCurrency();
+        void SetCurrency(Currency.CurrencyType type);
         void SetupAuthenticationData(WmcToken token, UserInfo userInfo);
         void Logout();
         Task AuthenticateWithFacebook(string authenticationToken);

@@ -213,6 +213,7 @@ namespace WMC.Repositories
             product.ManufacturerName = updateProduct.ManufacturerName;
             product.ModelName = updateProduct.ModelName;
             product.Price = updateProduct.Price;
+            product.PriceUsd = updateProduct.PriceUsd;
             await SaveProductsInCache(_products);
 
             var productUpdateAction = ProductAction.UpdateProduct(product);

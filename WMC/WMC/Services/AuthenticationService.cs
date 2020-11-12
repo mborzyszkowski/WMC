@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using WMC.Models;
@@ -14,12 +15,25 @@ namespace WMC.Services
         private UserInfo _userInfo;
         private readonly IAuthorisationRepository _authorisationRepository = DependencyService.Get<IAuthorisationRepository>();
         private static readonly SemaphoreSlim Semaphore = new SemaphoreSlim(1, 1);
+        private Currency _currency = new Currency();
 
         public bool IsManager() => _userInfo != null && _userInfo.Roles.Contains("manager");
 
         public bool IsEmployee() => _userInfo != null && _userInfo.Roles.Contains("employee");
 
         public string GetUserName() => _userInfo != null ? _userInfo.Username : "";
+
+        public bool IsPlCurrency() => _currency.Type == Currency.CurrencyType.PLN;
+
+        public bool IsUsCurrency() => _currency.Type == Currency.CurrencyType.USD;
+
+        public void SetCurrency(Currency.CurrencyType type)
+        {
+            _currency = new Currency { Type = type };
+            var serializedCurency = JsonConvert.SerializeObject(_currency);
+            Task task = SecureStorage.SetAsync(Constants.StorageCurrency, serializedCurency);
+            task.Wait();
+        }
 
         public void SetupAuthenticationData(WmcToken token, UserInfo userInfo)
         {

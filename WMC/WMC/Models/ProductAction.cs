@@ -18,6 +18,8 @@ namespace WMC.Models
         public string ModelName { get; set; }
         // On update/create
         public double Price { get; set; }
+        // On update/create
+        public double? PriceUsd { get; set; }
         // On quantity change
         public long QuantityChange { get; set; }
 
@@ -29,6 +31,7 @@ namespace WMC.Models
                 ManufacturerName = product.ManufacturerName,
                 ModelName = product.ModelName,
                 Price = product.Price,
+                PriceUsd = product.PriceUsd,
             };
 
         public static ProductAction UpdateProduct(Product product) =>
@@ -39,6 +42,7 @@ namespace WMC.Models
                 ManufacturerName = product.ManufacturerName,
                 ModelName = product.ModelName,
                 Price = product.Price,
+                PriceUsd = product.PriceUsd,
             };
 
         public static ProductAction DeleteProduct(long productId) =>
