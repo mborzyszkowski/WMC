@@ -1,2 +1,2 @@
 # WMC
-warehouse modile client
+warehouse mobile client
