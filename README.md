@@ -5,4 +5,4 @@ It is simple xamarin app which allows managing products (price, amount) includin
 
 App also using facebook oauth
 
-App cooperates WMC-API (server .net core)
+App cooperates WMC-API (server .net core) https://github.com/mborzyszkowski/WMC-API
